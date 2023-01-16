@@ -2,4 +2,6 @@
   var(34,asdasdx(),+  2.5);
   gdfgfd(-.34);
   varasdasd();
+  printf();
+  scanf();
 }
