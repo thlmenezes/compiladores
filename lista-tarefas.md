@@ -14,4 +14,4 @@ features:
 
 bugs:
 
-- [ ] dá erro em testes com \n
+- [x] dá erro em testes com \n

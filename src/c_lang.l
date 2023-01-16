@@ -17,11 +17,11 @@ alpha_num							{letra}|{digito}
 id	                  {letra}{alpha_num}*
 sinal									[+-]
 inteiros              {sinal}?{espacos}?{digito}+
-float                 {sinal}?{espacos}?{digito}+"."{digito}*|[-+]?{espacos}?"."{digito}+
+float                 {sinal}?{espacos}?{digito}+"."{digito}*|{sinal}?{espacos}?"."{digito}+
 comentario            "//".*
 comentario_multilinha "/*"([^*]|[*]*[^*/])*[*]+[/](?#se usar "*/", loop inf)
-espacos               [ \t]+
-outro	                .|\n
+espacos               [ \t\n]+
+outro	                .
 
 %%
 {id}                    { print("identificador \"%s\".\n", yytext);return ID; }

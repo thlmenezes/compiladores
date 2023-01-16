@@ -14,9 +14,7 @@
 input:    /* empty */
 	| input line
 ;
-line
-	: '\n'
-  | programa '\n'  { printf ("Programa sintaticamente correto!\n"); }
+line: programa  { printf ("Programa sintaticamente correto!\n"); }
 ;
 
 programa
@@ -27,9 +25,9 @@ lista_cmds
 	// regra vazia  
 	:	%empty
 	// comando único
-	| cmd				{;}
+	| cmd	';'			{;}
 	// vários comandos
-	| cmd ';' lista_cmds		{;}
+	| cmd lista_cmds		{;}
 ;
 
 cmd
@@ -64,5 +62,5 @@ main ()
 yyerror (s) /* Called by yyparse on error */
 	char *s;
 {
-	printf ("Problema com a analise sintatica!\n", s);
+	printf ("Problema com a analise sintatica! %s\n", s);
 }
