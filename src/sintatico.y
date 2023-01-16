@@ -18,22 +18,33 @@ line: programa  { printf ("Programa sintaticamente correto!\n"); }
 ;
 
 programa
-	:	'{' lista_cmds '}'		{;}
+	:	bloco		{;}
+;
+
+command
+	: bloco
+	| cmd ';'
+;
+
+bloco
+	: '{' lista_cmds '}'
 ;
 
 lista_cmds
 	// regra vazia  
 	:	%empty
 	// comando único
-	| cmd	';'			{;}
+	| command			{;}
 	// vários comandos
-	| cmd lista_cmds		{;}
+	| command lista_cmds		{;}
 ;
 
 cmd
-	:	ID '=' exp			{;}
+	: declare_var
 	| exp
 ;
+
+declare_var: ID '=' exp;
 
 exp
 	:	NUM				{;}
