@@ -21,6 +21,7 @@ sinal									[+-]
 %{ /* palavras reservadas */ 
 %}
 IF      if
+ELSE   else
 WHILE   while
 INT     int
 FLOAT   float
@@ -46,6 +47,7 @@ outro	                .
 {espacos}			          ;
 
 {IF}    { print("IF\n");return IF;}
+{ELSE}    { print("ELSE\n");return ELSE;}
 {WHILE} { print("WHILE\n");return WHILE;}
 {INT}   { print("INT\n");return TYPE_INT;}
 {FLOAT} { print("FLOAT\n");return TYPE_FLOAT;}

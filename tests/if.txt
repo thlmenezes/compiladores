@@ -1,0 +1,12 @@
+{
+  if (2);
+  if (2) {
+
+  } else int x = 2;
+
+  if (as()) {
+    float y = - .2;
+  } else if (foo) {
+    float z = 3.;
+  } else;
+}

@@ -6,6 +6,7 @@
 %}
 
 %token IF
+%token ELSE
 %token WHILE
 
 %token TYPE_INT
@@ -51,17 +52,21 @@ lista_cmds
 ;
 
 cmd
-	: loop_while
+	: if_else
+	| loop_while
 	| declare_var ';'
 	| exp ';'
 	| ';'
 ;
 
+if_else
+	: IF '(' exp ')' command
+	| IF '(' exp ')' command ELSE command
+;
+
 declare_var: BASE_TYPE ID '=' exp;
 
-loop_while:
-	WHILE '(' exp ')' command
-;
+loop_while: WHILE '(' exp ')' command;
 
 exp
 	:	NUM				{;}
