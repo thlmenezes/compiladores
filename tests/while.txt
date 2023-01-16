@@ -1,0 +1,13 @@
+{
+
+  while (2);
+  
+  while(a()) {}
+
+  while(2 4 +) ;
+  
+  while(2 4 +) {
+    int x = 1235;
+    int y = 5433;
+  }
+}

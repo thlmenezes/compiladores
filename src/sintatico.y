@@ -6,7 +6,7 @@
 %}
 
 %token IF
-%token FOR
+%token WHILE
 
 %token TYPE_INT
 %token TYPE_FLOAT
@@ -29,7 +29,7 @@ programa
 
 command
 	: bloco
-	| cmd ';'
+	| cmd
 ;
 
 bloco
@@ -51,11 +51,17 @@ lista_cmds
 ;
 
 cmd
-	: declare_var
-	| exp
+	: loop_while
+	| declare_var ';'
+	| exp ';'
+	| ';'
 ;
 
 declare_var: BASE_TYPE ID '=' exp;
+
+loop_while:
+	WHILE '(' exp ')' command
+;
 
 exp
 	:	NUM				{;}

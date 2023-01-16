@@ -21,7 +21,7 @@ sinal									[+-]
 %{ /* palavras reservadas */ 
 %}
 IF      if
-FOR     for
+WHILE   while
 INT     int
 FLOAT   float
 
@@ -45,10 +45,10 @@ outro	                .
 {comentario_multilinha} { print("comentario multilinha\n");   }
 {espacos}			          ;
 
-{IF} { return IF;}
-{FOR} { return FOR;}
-{INT} { return TYPE_INT;}
-{FLOAT} { return TYPE_FLOAT;}
+{IF}    { print("IF\n");return IF;}
+{WHILE} { print("WHILE\n");return WHILE;}
+{INT}   { print("INT\n");return TYPE_INT;}
+{FLOAT} { print("FLOAT\n");return TYPE_FLOAT;}
 
 {inteiros}              { print("inteiros\n");return NUM;     }
 {float}                 { print("float\n");return NUM;        }
