@@ -33,7 +33,7 @@ lista_cmds
 ;
 
 cmd
-	:		ID '=' exp			{;}
+	:	ID '=' exp			{;}
 ;
 
 exp
