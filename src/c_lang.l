@@ -11,24 +11,28 @@
   #include "y.tab.h"
 %}
 
-id	                  [a-zA-Z_][a-zA-Z_0-9]*
-inteiros              [+-]?[0-9]+
-float                 [-+]?[0-9]+"."[0-9]*\n|[-+]?"."[0-9]+
+letra	                [a-zA-Z_]
+digito								[0-9]
+alpha_num							{letra}|{digito}
+id	                  {letra}{alpha_num}*
+sinal									[+-]
+inteiros              {sinal}?{espacos}?{digito}+
+float                 {sinal}?{espacos}?{digito}+"."{digito}*|[-+]?{espacos}?"."{digito}+
 comentario            "//".*
 comentario_multilinha "/*"([^*]|[*]*[^*/])*[*]+[/](?#se usar "*/", loop inf)
 espacos               [ \t]+
 outro	                .|\n
 
 %%
-{id}                    { print("identificador\n");return ID; }
+{id}                    { print("identificador \"%s\".\n", yytext);return ID; }
 {inteiros}              { print("inteiros\n");return NUM;     }
-{float}                 { print("float\n");                   }
+{float}                 { print("float\n");return NUM;        }
 {comentario}            { print("comentario de uma linha\n"); }
 {comentario_multilinha} { print("comentario multilinha\n");   }
 {espacos}			          ;
-{outro}                 { print("outro\n");return yytext[0];  }
+{outro}                 { return yytext[0];  }
 %%
-/* recomendavel declarar sempre funcao yywrap() */
+
 int yywrap() {
 	return 1;
 }
