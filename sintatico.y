@@ -40,6 +40,8 @@ exp
 
 %%
 
+#include "lex.yy.c"
+
 main () 
 {
 	yyparse ();
