@@ -1,7 +1,9 @@
+features:
+
 - [ ] printf/scanf
-  - [ ] sintaxe: comando: chamada de função
-  - [ ] sintaxe: expressão: chamada de função
-  - [ ] sintaxe: lista de argumentos
+  - [x] sintaxe: comando: chamada de função
+  - [x] sintaxe: expressão: chamada de função
+  - [x] sintaxe: lista de argumentos
 - [ ] if
   - [ ] léxico: definir palavra reservada
   - [ ] sintaxe: tipos de expressão (int, boolean)
@@ -9,3 +11,7 @@
 - [ ] loop
   - [ ] léxico: definir palavra reservada
   - [ ] sintaxe
+
+bugs:
+
+- [ ] dá erro em testes com \n

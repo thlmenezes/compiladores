@@ -34,12 +34,22 @@ lista_cmds
 
 cmd
 	:	ID '=' exp			{;}
+	| exp
 ;
 
 exp
 	:	NUM				{;}
 	| ID				{;}
 	| exp exp '+'			{;}
+	| func_call
+;
+
+func_call: ID '(' argument_list ')';
+
+argument_list
+	: %empty
+	| exp
+	| exp ',' argument_list
 ;
 
 %%
