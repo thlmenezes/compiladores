@@ -11,25 +11,48 @@
   #include "y.tab.h"
 %}
 
+%{/* grupos simples */ 
+%}
 letra	                [a-zA-Z_]
 digito								[0-9]
 alpha_num							{letra}|{digito}
-id	                  {letra}{alpha_num}*
 sinal									[+-]
-inteiros              {sinal}?{espacos}?{digito}+
-float                 {sinal}?{espacos}?{digito}+"."{digito}*|{sinal}?{espacos}?"."{digito}+
+
+%{ /* palavras reservadas */ 
+%}
+IF      if
+FOR     for
+INT     int
+FLOAT   float
+
+%{
+	/* ignore */
+%}
 comentario            "//".*
 comentario_multilinha "/*"([^*]|[*]*[^*/])*[*]+[/](?#se usar "*/", loop inf)
 espacos               [ \t\n]+
+
+%{ /* complicados */ 
+%}
+id	                  {letra}{alpha_num}*
+inteiros              {sinal}?{espacos}?{digito}+
+float                 {sinal}?{espacos}?{digito}+"."{digito}*|{sinal}?{espacos}?"."{digito}+
+
 outro	                .
 
 %%
-{id}                    { print("identificador \"%s\".\n", yytext);return ID; }
-{inteiros}              { print("inteiros\n");return NUM;     }
-{float}                 { print("float\n");return NUM;        }
 {comentario}            { print("comentario de uma linha\n"); }
 {comentario_multilinha} { print("comentario multilinha\n");   }
 {espacos}			          ;
+
+{IF} { return IF;}
+{FOR} { return FOR;}
+{INT} { return TYPE_INT;}
+{FLOAT} { return TYPE_FLOAT;}
+
+{inteiros}              { print("inteiros\n");return NUM;     }
+{float}                 { print("float\n");return NUM;        }
+{id}                    { print("identificador \"%s\".\n", yytext);return ID; }
 {outro}                 { return yytext[0];  }
 %%
 

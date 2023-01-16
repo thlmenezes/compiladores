@@ -5,6 +5,12 @@
 #include <stdio.h> 
 %}
 
+%token IF
+%token FOR
+
+%token TYPE_INT
+%token TYPE_FLOAT
+
 %token NUM
 %token ID
 
@@ -30,13 +36,18 @@ bloco
 	: '{' lista_cmds '}'
 ;
 
+BASE_TYPE
+	: TYPE_INT
+	| TYPE_FLOAT
+;
+
 lista_cmds
 	// regra vazia  
 	:	%empty
 	// comando único
-	| command			{;}
+	| command
 	// vários comandos
-	| command lista_cmds		{;}
+	| command lista_cmds
 ;
 
 cmd
@@ -44,7 +55,7 @@ cmd
 	| exp
 ;
 
-declare_var: ID '=' exp;
+declare_var: BASE_TYPE ID '=' exp;
 
 exp
 	:	NUM				{;}
