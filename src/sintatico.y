@@ -24,7 +24,11 @@ programa
 ;
 
 lista_cmds
-	:	cmd				{;}
+	// regra vazia  
+	:	%empty
+	// comando único
+	| cmd				{;}
+	// vários comandos
 	| cmd ';' lista_cmds		{;}
 ;
 
