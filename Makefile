@@ -9,6 +9,7 @@ FLEX_FILE = $(wildcard $(SRC_PATH)/*.l)
 ##### Compiler Config
 CC       := gcc
 CFLAGS   := -I $(DEP_PATH)
+YFLAGS   := -v -d
 
 ##### Executable name
 EXEC = parser
@@ -29,7 +30,7 @@ $(EXEC): $(BIN_PATH)/y.tab.c
 
 ##### Generates object files
 $(BIN_PATH)/y.tab.c: $(YACC_FILE) $(DEP_PATH)/lex.yy.c
-	yacc -d $< -o $@
+	yacc $(YFLAGS) $< -o $@
 	cp $(BIN_PATH)/y.tab.h $(DEP_PATH)/y.tab.h
 
 $(DEP_PATH)/lex.yy.c: $(FLEX_FILE)
