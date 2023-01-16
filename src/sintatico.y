@@ -48,7 +48,7 @@ exp
 
 main () 
 {
-	yyparse ();
+	return yyparse ();
 }
 
 yyerror (s) /* Called by yyparse on error */
