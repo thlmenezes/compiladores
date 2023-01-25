@@ -21,10 +21,12 @@ sinal									[+-]
 %{ /* palavras reservadas */ 
 %}
 IF      if
-ELSE   else
+ELSE    else
 WHILE   while
 INT     int
 FLOAT   float
+READ	  read
+LOG		  log
 
 %{
 	/* ignore */
@@ -51,6 +53,8 @@ outro	                .
 {WHILE} { print("WHILE\n");return WHILE;}
 {INT}   { print("INT\n");return TYPE_INT;}
 {FLOAT} { print("FLOAT\n");return TYPE_FLOAT;}
+{READ} { print("READ\n");return READ;}
+{LOG} { print("LOG\n");return LOG;}
 
 {inteiros}              { print("inteiros\n");return NUM;     }
 {float}                 { print("float\n");return NUM;        }

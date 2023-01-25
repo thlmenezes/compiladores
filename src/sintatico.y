@@ -8,6 +8,8 @@
 %token IF
 %token ELSE
 %token WHILE
+%token READ
+%token LOG
 
 %token TYPE_INT
 %token TYPE_FLOAT
@@ -30,7 +32,7 @@ programa
 
 command
 	: bloco
-	| cmd
+	| single_command
 ;
 
 bloco
@@ -51,9 +53,11 @@ lista_cmds
 	| command lista_cmds
 ;
 
-cmd
+single_command
 	: if_else
 	| loop_while
+	| read_command ';'
+	| write_command ';'
 	| declare_var ';'
 	| exp ';'
 	| ';'
@@ -64,9 +68,14 @@ if_else
 	| IF '(' exp ')' command ELSE command
 ;
 
-declare_var: BASE_TYPE ID '=' exp;
+declare_var
+	: BASE_TYPE ID
+	| BASE_TYPE ID '=' exp;
 
 loop_while: WHILE '(' exp ')' command;
+
+read_command: READ '(' exp ')';
+write_command: LOG '(' exp ')';
 
 exp
 	:	NUM				{;}
