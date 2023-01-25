@@ -5,3 +5,7 @@ aprender:
 features:
 
 bugs:
+
+tarefa:
+
+- [ ] montar lista de tarefas para a entrega 3
