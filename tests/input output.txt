@@ -2,5 +2,5 @@
   int x;
   read (x);
 
-  log (x);
+  log(x);
 }

@@ -70,7 +70,8 @@ if_else
 
 declare_var
 	: BASE_TYPE ID
-	| BASE_TYPE ID '=' exp;
+	| BASE_TYPE ID '=' exp
+;
 
 loop_while: WHILE '(' exp ')' command;
 
