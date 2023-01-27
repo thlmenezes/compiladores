@@ -2,7 +2,10 @@
 /* considerando notacao polonesa para expressoes */
 
 %{
+#include <stdlib.h>
 #include <stdio.h> 
+#include "symbol_table.h"
+
 %}
 
 %token IF

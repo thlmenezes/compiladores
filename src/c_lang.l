@@ -8,7 +8,7 @@
 %{
 	#include <stdio.h>
 	#define print printf
-  #include "y.tab.h"
+    #include "y.tab.h"
 %}
 
 %{/* grupos simples */ 

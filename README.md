@@ -16,7 +16,8 @@ Estudantes:
 
 - `/`: No diretório raiz, encontram-se os arquivos `Makefile`, `README.md` e `.gitignore`, além do  arquivo `install-deps.sh` com as dependências que precisam ser instaladas e os arquivos `/run-test.sh` e `/run-tests.sh` para executar os arquivos de testes;
 - `/tests`: contém os arquivos de teste;
-- `/src`: contém o arquivo `c_lang.l`, correspondente ao analisador léxico e o arquivo `sintatico.y` correspondente ao analisador sintático.
+- `/src`: contém o arquivo `c_lang.l`, correspondente ao analisador léxico e o arquivo `sintatico.y` correspondente ao analisador sintático, além dos arquivos `.c` auxiliares.
+- `/lib`: contém os arquivos `.h`
 - `/include` e `/obj`: após a execução do makefile essas pastas serão criadas, onde serão organizados os arquivos gerados pelos programas flex e bison.
 
 ## Dependências
