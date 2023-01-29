@@ -4,56 +4,93 @@
 %{
 #include <stdlib.h>
 #include <stdio.h> 
-#include "symbol_table.h"
+#include "../lib/AST.h"
+
+int globalCounterOfSymbols = 1;
+
+parserNode* parser_ast = NULL;
 
 %}
 
-%token IF
-%token ELSE
-%token WHILE
-%token READ
-%token LOG
+%union {
+  char* str;
+  struct parserNode* node;
+}
 
-%token TYPE_INT
-%token TYPE_FLOAT
+%token<str> IF
+%token<str> ELSE
+%token<str> WHILE
+%token<str> READ
+%token<str> LOG
 
-%token NUM
-%token ID
+%token<str> TYPE_INT
+%token<str> TYPE_FLOAT
+
+%token<str> NUM
+%token<str> ID
+
+// Parsing entry point start
+%start entryPoint
+
+// Types definitions
+%type <node> input line programa bloco command single_command lista_cmds if_else loop_while read_command write_command declare_var base_type exp func_call argument_list
 
 %%
 /* Regras definindo a GLC e acoes correspondentes */
 /* neste nosso exemplo quase todas as acoes estao vazias */
-input:    /* empty */
-	| input line
+
+
+entryPoint: input {
+  parser_ast = $1;
+  printf("Program entry point\n");
+}
 ;
-line: programa  { printf ("Programa sintaticamente correto!\n"); }
+
+input: input line 
+	| %empty {
+		$$ = NULL; 
+	}   
+;
+
+line: programa  { 
+	$$ = $1; 
+	printf ("Programa sintaticamente correto!\n"); 
+}
 ;
 
 programa
-	:	bloco		{;}
-;
-
-command
-	: bloco
-	| single_command
+	:	bloco		{
+    	$$ = $1; // (o primeiro nó da AST vai ser o proprio programa)
+	}
 ;
 
 bloco
-	: '{' lista_cmds '}'
-;
-
-BASE_TYPE
-	: TYPE_INT
-	| TYPE_FLOAT
+	: '{' lista_cmds '}' {
+		$$ = $2;
+	}
 ;
 
 lista_cmds
-	// regra vazia  
-	:	%empty
-	// comando único
-	| command
 	// vários comandos
-	| command lista_cmds
+	: command lista_cmds
+	// comando único
+	| command {
+		$$ = $1; 
+	}
+	// regra vazia  
+	|	%empty {
+		$$ = NULL; 
+	}
+	
+;
+
+command
+	: bloco {
+		$$ = $1;
+	}
+	| single_command {
+		$$ = $1;
+	}
 ;
 
 single_command
@@ -72,8 +109,15 @@ if_else
 ;
 
 declare_var
-	: BASE_TYPE ID
-	| BASE_TYPE ID '=' exp
+	: base_type ID {
+		printf("declare var");
+	}
+	| base_type ID '=' exp
+;
+
+base_type
+	: TYPE_INT
+	| TYPE_FLOAT
 ;
 
 loop_while: WHILE '(' exp ')' command;
@@ -82,7 +126,7 @@ read_command: READ '(' exp ')';
 write_command: LOG '(' exp ')';
 
 exp
-	:	NUM				{;}
+	: NUM				{;}
 	| ID				{;}
 	| exp exp '+'			{;}
 	| func_call
@@ -100,8 +144,9 @@ argument_list
 
 #include "lex.yy.c"
 
-main () 
+int main () 
 {
+	parser_ast = NULL;
 	return yyparse ();
 }
 
