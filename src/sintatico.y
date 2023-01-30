@@ -49,18 +49,18 @@ entryPoint: input {
 input: input line 
 	| %empty {
 		$$ = NULL; 
-	}   
+	}
 ;
 
 line: programa  { 
-	$$ = $1; 
+	$$ = $1;
 	printf ("Programa sintaticamente correto!\n"); 
 }
 ;
 
 programa
 	:	bloco	{
-    	$$ = $1; // (o primeiro nó da AST vai ser o proprio programa)
+		$$ = $1; // (o primeiro nó da AST vai ser o proprio programa)
 	}
 ;
 
@@ -73,6 +73,7 @@ bloco
 lista_cmds
 	: command {
 		$$ = $1; 
+		printf("2. TEST\n");
 	}
 	// vários comandos
 	| command lista_cmds
@@ -108,9 +109,11 @@ if_else
 
 declare_var
 	: base_type ID {
-		printf("declare var");
+		printf("declare var\n");
 	}
-	| base_type ID '=' exp
+	| base_type ID '=' exp {
+		printf("declare var\n");
+	}
 ;
 
 base_type

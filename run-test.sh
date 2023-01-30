@@ -12,6 +12,7 @@ DUMP_FILE="$DUMP_FOLDER/$TEST_FILENAME.$TEST_FILE_SUFFIX"
 
 if ./parser < "$1" &> "$DUMP_FILE"; then
   echo "Processing \"$TEST_FILENAME\": Ok!"
+  # cat "$DUMP_FILE"
 else
   echo "Processing \"$TEST_FILENAME\": ERROR!"
   cat "$DUMP_FILE"
