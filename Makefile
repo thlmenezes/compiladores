@@ -9,7 +9,7 @@ FLEX_FILE = $(wildcard $(SRC_PATH)/*.l)
 ##### Compiler Config
 CC       := gcc
 CFLAGS   := -I $(DEP_PATH)
-YFLAGS   := -v -d
+YFLAGS   := -Wyacc -v -d
 
 ##### Executable name
 EXEC = parser

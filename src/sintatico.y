@@ -33,7 +33,7 @@ parserNode* parser_ast = NULL;
 %start entryPoint
 
 // Types definitions
-%type <node> input line programa bloco command single_command lista_cmds if_else loop_while read_command write_command declare_var base_type exp func_call argument_list
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var base_type exp func_call argument_list lista_cmds empty_command 
 
 %%
 /* Regras definindo a GLC e acoes correspondentes */
@@ -59,7 +59,7 @@ line: programa  {
 ;
 
 programa
-	:	bloco		{
+	:	bloco	{
     	$$ = $1; // (o primeiro nó da AST vai ser o proprio programa)
 	}
 ;
@@ -71,17 +71,15 @@ bloco
 ;
 
 lista_cmds
-	// vários comandos
-	: command lista_cmds
-	// comando único
-	| command {
+	: command {
 		$$ = $1; 
 	}
+	// vários comandos
+	| command lista_cmds
 	// regra vazia  
 	|	%empty {
 		$$ = NULL; 
 	}
-	
 ;
 
 command
@@ -100,7 +98,7 @@ single_command
 	| write_command ';'
 	| declare_var ';'
 	| exp ';'
-	| ';'
+	| empty_command ';'
 ;
 
 if_else
@@ -121,9 +119,9 @@ base_type
 ;
 
 loop_while: WHILE '(' exp ')' command;
-
 read_command: READ '(' exp ')';
 write_command: LOG '(' exp ')';
+empty_command: %empty;
 
 exp
 	: NUM				{;}
@@ -144,8 +142,7 @@ argument_list
 
 #include "lex.yy.c"
 
-int main () 
-{
+int main() {
 	parser_ast = NULL;
 	return yyparse ();
 }
