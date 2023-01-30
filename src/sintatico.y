@@ -32,8 +32,12 @@ parserNode* parser_ast = NULL;
 // Parsing entry point start
 %start entryPoint
 
+/* Tokens to solve shift reduce conflicts (https://stackoverflow.com/questions/1737460/how-to-find-shift-reduce-conflict-in-this-yacc-file) */
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
 // Types definitions
-%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var base_type exp func_call argument_list lista_cmds empty_command 
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var DATA_TYPE expression func_call argument_list lista_cmds
 
 %%
 /* Regras definindo a GLC e acoes correspondentes */
@@ -71,16 +75,13 @@ bloco
 ;
 
 lista_cmds
-	: command {
-		$$ = $1; 
-		printf("2. TEST\n");
-	}
-	// vários comandos
-	| command lista_cmds
-	// regra vazia  
-	|	%empty {
+	: %empty {
 		$$ = NULL; 
 	}
+	| command lista_cmds {
+		$$ = $1; 
+		printf("2. TEST\n");
+	}	
 ;
 
 command
@@ -98,38 +99,38 @@ single_command
 	| read_command ';'
 	| write_command ';'
 	| declare_var ';'
-	| exp ';'
-	| empty_command ';'
+	| expression ';'
+	| ';'
 ;
 
 if_else
-	: IF '(' exp ')' command
-	| IF '(' exp ')' command ELSE command
+	: IF '(' expression ')' command   %prec LOWER_THAN_ELSE
+	| IF '(' expression ')' command ELSE command
 ;
 
 declare_var
-	: base_type ID {
+	: DATA_TYPE ID {
 		printf("declare var\n");
 	}
-	| base_type ID '=' exp {
+	| DATA_TYPE ID '=' expression {
 		printf("declare var\n");
 	}
 ;
 
-base_type
+DATA_TYPE
 	: TYPE_INT
 	| TYPE_FLOAT
 ;
 
-loop_while: WHILE '(' exp ')' command;
-read_command: READ '(' exp ')';
-write_command: LOG '(' exp ')';
-empty_command: %empty;
+loop_while: WHILE '(' expression ')' command;
+read_command: READ '(' expression ')';
+write_command: LOG '(' expression ')';
 
-exp
+
+expression
 	: NUM				{;}
 	| ID				{;}
-	| exp exp '+'			{;}
+	| expression expression '+'			{;}
 	| func_call
 ;
 
@@ -137,8 +138,8 @@ func_call: ID '(' argument_list ')';
 
 argument_list
 	: %empty
-	| exp
-	| exp ',' argument_list
+	| expression
+	| expression ',' argument_list
 ;
 
 %%
