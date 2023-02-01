@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h> 
 #include "../lib/AST.h"
+#include "../lib/symbol_table.h"
 
 int globalCounterOfSymbols = 1;
 
@@ -111,6 +112,16 @@ if_else
 declare_var
 	: DATA_TYPE ID {
 		printf("declare var\n");
+		SymbolData newVar = {
+			.symbolID = globalCounterOfSymbols++,
+			.symbolType=enumFunction,
+			// .type = $1->value,
+			.type = "INT",
+			.name = $2,
+			// .line = running_line_count,
+			// .column = running_column_count
+		};
+		addSymbol(newVar);
 	}
 	| DATA_TYPE ID '=' expression {
 		printf("declare var\n");

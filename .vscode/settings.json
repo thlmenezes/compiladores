@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.y": "yacc",
+    "*.tcc": "c",
+    "stdexcept": "cpp"
+  }
+}
