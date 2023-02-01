@@ -4,3 +4,5 @@ lex.yy.c
 *.tab.c
 *.tab.h
 parser
+*.d
+*.o

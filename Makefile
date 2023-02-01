@@ -3,13 +3,18 @@ DEP_PATH = include
 BIN_PATH = obj
 
 ##### File list by type
-YACC_FILE = $(wildcard $(SRC_PATH)/*.y)
-FLEX_FILE = $(wildcard $(SRC_PATH)/*.l)
+YACC_FILES = $(wildcard $(SRC_PATH)/*.y)
+FLEX_FILES = $(wildcard $(SRC_PATH)/*.l)
+C_FILES = $(wildcard $(SRC_PATH)/*.c)
+OBJ_FILES = $(addprefix $(BIN_PATH)/,$(notdir $(C_FILES:.c=.o)))
 
 ##### Compiler Config
 CC       := gcc
-CFLAGS   := -I $(DEP_PATH)
+CFLAGS   := -I $(DEP_PATH) -I lib
 YFLAGS   := -Wyacc -v -d
+##### Automatic dependency creation
+# sem : pq o thales falou
+DEP_FLAGS = -M -MT $@ -MT $(BIN_PATH)/$(*F).o -MP -MF $@
 
 ##### Executable name
 EXEC = parser
@@ -25,15 +30,25 @@ RM = rm -f
 all: folders | $(EXEC)
 
 ##### Generates executable
-$(EXEC): $(BIN_PATH)/y.tab.c
-	$(CC) $(CFLAGS) $(OUTPUT_OPTION) $<
+$(EXEC): $(BIN_PATH)/y.tab.c $(OBJ_FILES)
+	$(CC) $< -c $(CFLAGS) -o $(<:.c=.o)
+	$(CC) -o $@ $(OBJ_FILES) $(CFLAGS)
 
-##### Generates object files
-$(BIN_PATH)/y.tab.c: $(YACC_FILE) $(DEP_PATH)/lex.yy.c
+##### Generate object files for our C code
+$(BIN_PATH)/%.o: $(DEP_PATH)/%.d | folders
+	$(CC) $(addprefix $(SRC_PATH)/,$(notdir $(<:.d=.c))) -c $(CFLAGS) -o $@
+
+##### Generates dependency files
+$(DEP_PATH)/%.d: $(SRC_PATH)/%.c | folders
+	$(CC) $(CFLAGS) $< $(DEP_FLAGS)
+
+##### Generates object files for yacc/flex code
+$(BIN_PATH)/y.tab.c: $(YACC_FILES) $(DEP_PATH)/lex.yy.c
 	yacc $(YFLAGS) $< -o $@
 	cp $(BIN_PATH)/y.tab.h $(DEP_PATH)/y.tab.h
+	cp $(BIN_PATH)/y.tab.c $(SRC_PATH)/y.tab.c
 
-$(DEP_PATH)/lex.yy.c: $(FLEX_FILE)
+$(DEP_PATH)/lex.yy.c: $(FLEX_FILES)
 	flex -o $@ $<
 
 clean:
