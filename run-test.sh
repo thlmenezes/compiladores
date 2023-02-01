@@ -1,9 +1,29 @@
 #!/usr/bin/env bash
 
+##### PARSING OPTS
+OPTIND=1 # a POSIX variable needed for getops
+# Initialize our own variables:
+OPT_APPEND=0
+OPT_VERBOSE=0
+
+while getopts "av" opt; do
+  case "$opt" in
+    a)  OPT_APPEND=1
+      ;;
+    v)  OPT_VERBOSE=1
+      ;;
+  esac
+done
+
+# extra code for opts
+shift $((OPTIND-1))
+[ "${1:-}" = "--" ] && shift
+###### PARSING OPTS
+
 TEST_FILE_SUFFIX="txt"
 TEST_FILENAME=$(basename "$1" ".$TEST_FILE_SUFFIX")
 
-VERBOSE_FLAG=${2-:""}
+OUTPUT_FILE="./log"
 
 DUMP_FOLDER=/tmp/compiladores-dump
 if [ ! -d "$DUMP_FOLDER" ]; then
@@ -12,15 +32,29 @@ fi
 
 DUMP_FILE="$DUMP_FOLDER/$TEST_FILENAME.$TEST_FILE_SUFFIX"
 
-if ./parser < "$1" &> "$DUMP_FILE"; then
+# add header of result
+echo "
+----------------------------
+Test '$TEST_FILENAME':
+" > "$DUMP_FILE"
+
+if ./parser < "$1" &>> "$DUMP_FILE" ; then
   echo "Processing \"$TEST_FILENAME\": Ok!"
   
   # if should print
-  if [ $VERBOSE_FLAG == "-v" ]; then
+  if [ $OPT_VERBOSE -eq 1 ]; then
     cat "$DUMP_FILE"
   fi
 
 else
   echo "Processing \"$TEST_FILENAME\": ERROR!"
   cat "$DUMP_FILE"
+fi
+
+if [ $OPT_APPEND -eq 1 ]; then
+echo 1
+  cat "$DUMP_FILE" >> "$OUTPUT_FILE"
+else
+echo 2
+  mv $DUMP_FILE $OUTPUT_FILE
 fi

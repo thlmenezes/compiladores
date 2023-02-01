@@ -3,6 +3,8 @@ lex.yy.c
 *.output
 *.tab.c
 *.tab.h
-parser
 *.d
 *.o
+# executable and logs
+parser
+log

@@ -18,6 +18,8 @@ DEP_FLAGS = -M -MT $@ -MT $(BIN_PATH)/$(*F).o -MP -MF $@
 
 ##### Executable name
 EXEC = parser
+##### result log
+LOG = log
 ##### Remove directories
 RMDIR = rm -rdf
 ##### Remove files
@@ -54,6 +56,7 @@ $(DEP_PATH)/lex.yy.c: $(FLEX_FILES)
 clean:
 	-$(RMDIR) $(BIN_PATH) $(DEP_PATH)
 	-$(RM) $(EXEC)
+	-$(RM) $(LOG)
 
 folders:
 	@mkdir -p $(SRC_PATH) $(DEP_PATH) $(BIN_PATH)
