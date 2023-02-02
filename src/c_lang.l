@@ -7,8 +7,14 @@
 
 %{
 	#include <stdio.h>
-	#define print printf
-    #include "y.tab.h"
+	#include "y.tab.h"
+
+	// fake print with same function type as printf
+	int fake_printf(const char *format, ...) {}
+	// // for lex to print, use this define
+	// #define print printf
+	// for lex to not print, use this define
+	#define print fake_printf
 %}
 
 %{/* grupos simples */ 
