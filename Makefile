@@ -19,7 +19,7 @@ DEP_FLAGS = -M -MT $@ -MT $(BIN_PATH)/$(*F).o -MP -MF $@
 ##### Executable name
 EXEC = parser
 ##### result log
-LOG = log
+LOG = *.log
 ##### Remove directories
 RMDIR = rm -rdf
 ##### Remove files

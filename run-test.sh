@@ -23,7 +23,7 @@ shift $((OPTIND-1))
 TEST_FILE_SUFFIX="txt"
 TEST_FILENAME=$(basename "$1" ".$TEST_FILE_SUFFIX")
 
-OUTPUT_FILE="./log"
+OUTPUT_FILE=${2:-"./output.log"}
 
 DUMP_FOLDER=/tmp/compiladores-dump
 if [ ! -d "$DUMP_FOLDER" ]; then
@@ -52,9 +52,7 @@ else
 fi
 
 if [ $OPT_APPEND -eq 1 ]; then
-echo 1
   cat "$DUMP_FILE" >> "$OUTPUT_FILE"
 else
-echo 2
-  mv $DUMP_FILE $OUTPUT_FILE
+  cp $DUMP_FILE $OUTPUT_FILE
 fi

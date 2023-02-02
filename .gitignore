@@ -7,4 +7,4 @@ lex.yy.c
 *.o
 # executable and logs
 parser
-log
+*.log
