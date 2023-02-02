@@ -54,5 +54,5 @@ fi
 if [ $OPT_APPEND -eq 1 ]; then
   cat "$DUMP_FILE" >> "$OUTPUT_FILE"
 else
-  cp $DUMP_FILE $OUTPUT_FILE
+  cp "$DUMP_FILE" "$OUTPUT_FILE"
 fi
