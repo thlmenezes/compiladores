@@ -2,6 +2,7 @@
   "files.associations": {
     "*.y": "yacc",
     "*.tcc": "c",
-    "stdexcept": "cpp"
+    "stdexcept": "cpp",
+    "symbol_table.h": "c"
   }
 }
