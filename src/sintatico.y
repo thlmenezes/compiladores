@@ -80,8 +80,7 @@ lista_cmds
 		$$ = NULL; 
 	}
 	| command lista_cmds {
-		$$ = $1; 
-		printf("2. TEST\n");
+		$$ = $1;
 	}	
 ;
 
@@ -111,20 +110,28 @@ if_else
 
 declare_var
 	: DATA_TYPE ID {
-		printf("declare var\n");
+		printf("declare var \"%s\"\n", $1);
+
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
 			.symbolType=enumFunction,
 			// .type = $1->value,
 			.type = "INT",
 			.name = $2,
-			// .line = running_line_count,
-			// .column = running_column_count
 		};
 		addSymbol(newVar);
 	}
 	| DATA_TYPE ID '=' expression {
-		printf("declare var\n");
+		printf("declare var \"%s\"\n", $1);
+
+		SymbolData newVar = {
+			.symbolID = globalCounterOfSymbols++,
+			.symbolType=enumFunction,
+			// .type = $1->value,
+			.type = "INT",
+			.name = $2,
+		};
+		addSymbol(newVar);
 	}
 ;
 

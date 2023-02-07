@@ -6,6 +6,10 @@ Symbol* symbolTable = NULL;
 void addSymbol(SymbolData newSymbolData) {
   Symbol* newSymbolPtr;
   HASH_FIND_INT(symbolTable, &newSymbolData.symbolID, newSymbolPtr);
+    // printf("symbol %s already declared!\n", &newSymbolData.name);
+    // printf("symbol %s already declared!\n", newSymbolData.name);
+    // printf("symbol %i already declared!\n", &newSymbolData.name);
+    // printf("symbol %i already declared!\n", newSymbolData.name);
   
   if (newSymbolPtr != NULL) {
     printf("symbol %s already declared!\n", newSymbolData.name);
