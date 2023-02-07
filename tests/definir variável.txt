@@ -1,5 +1,3 @@
 {
-  int var = 54;
-  int var;
-  int var1;
+  int tvar = 0;
 }

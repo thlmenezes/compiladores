@@ -6,11 +6,18 @@
 #include <stdio.h> 
 #include "../lib/AST.h"
 #include "../lib/symbol_table.h"
+#include "defines.h"
+#include "utils.h"
 
 int globalCounterOfSymbols = 1;
 
 parserNode* parser_ast = NULL;
 
+/* lexeme of identifier or reserved word */
+char tokenBuffer[MAXTOKENLEN+1];
+
+// lugar pra guardar nome
+static char * savedName;
 %}
 
 %union {
@@ -47,7 +54,7 @@ parserNode* parser_ast = NULL;
 
 entryPoint: input {
   parser_ast = $1;
-  printf("Program entry point\n");
+  syn_print("Program entry point\n");
 }
 ;
 
@@ -59,7 +66,7 @@ input: input line
 
 line: programa  { 
 	$$ = $1;
-	printf ("Programa sintaticamente correto!\n"); 
+	syn_print ("Programa sintaticamente correto!\n"); 
 }
 ;
 
@@ -94,13 +101,13 @@ command
 ;
 
 single_command
-	: if_else
-	| loop_while
-	| read_command ';'
-	| write_command ';'
-	| declare_var ';'
-	| expression ';'
-	| ';'
+	: if_else { $$ = $1; }
+	| loop_while { $$ = $1; }
+	| read_command ';' { $$ = $1; }
+	| write_command ';' { $$ = $1; }
+	| declare_var ';' { $$ = $1; }
+	| expression ';' { $$ = $1; }
+	| ';' { $$ = NULL; }
 ;
 
 if_else
@@ -109,27 +116,19 @@ if_else
 ;
 
 declare_var
-	: DATA_TYPE ID {
-		printf("declare var \"%s\"\n", $1);
+	: DATA_TYPE ID
+		{
+			savedName = copyString(tokenBuffer);
+		}
+		'=' expression {
+		syn_print(".y has \"%s\"\n", savedName);
 
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
 			.symbolType=enumFunction,
 			// .type = $1->value,
 			.type = "INT",
-			.name = $2,
-		};
-		addSymbol(newVar);
-	}
-	| DATA_TYPE ID '=' expression {
-		printf("declare var \"%s\"\n", $1);
-
-		SymbolData newVar = {
-			.symbolID = globalCounterOfSymbols++,
-			.symbolType=enumFunction,
-			// .type = $1->value,
-			.type = "INT",
-			.name = $2,
+			.name = savedName,
 		};
 		addSymbol(newVar);
 	}
@@ -172,5 +171,5 @@ int main() {
 yyerror (s) /* Called by yyparse on error */
 	char *s;
 {
-	printf ("Problema com a analise sintatica! %s\n", s);
+	syn_print ("Problema com a analise sintatica! %s\n", s);
 }

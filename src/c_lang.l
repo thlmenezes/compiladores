@@ -8,13 +8,10 @@
 %{
 	#include <stdio.h>
 	#include "y.tab.h"
+	#include "defines.h"
 
-	// fake print with same function type as printf
-	int fake_printf(const char *format, ...) {}
-	// // for lex to print, use this define
-	// #define print printf
-	// for lex to not print, use this define
-	#define print fake_printf
+char tokenBuffer[MAXTOKENLEN+1];
+int fake_printf(const char *format, ...){}
 %}
 
 %{/* grupos simples */ 
@@ -50,24 +47,44 @@ float                 {sinal}?{espacos}?{digito}+"."{digito}*|{sinal}?{espacos}?
 outro	                .
 
 %%
-{comentario}            { print("comentario de uma linha\n"); }
-{comentario_multilinha} { print("comentario multilinha\n");   }
+{comentario}            { lex_print("comentario de uma linha\n"); }
+{comentario_multilinha} { lex_print("comentario multilinha\n");   }
 {espacos}			          ;
 
-{IF}    { print("IF\n");return IF;}
-{ELSE}    { print("ELSE\n");return ELSE;}
-{WHILE} { print("WHILE\n");return WHILE;}
-{INT}   { print("INT\n");return TYPE_INT;}
-{FLOAT} { print("FLOAT\n");return TYPE_FLOAT;}
-{READ} { print("READ\n");return READ;}
-{LOG} { print("LOG\n");return LOG;}
+{IF}    { lex_print("IF\n");return IF;}
+{ELSE}    { lex_print("ELSE\n");return ELSE;}
+{WHILE} { lex_print("WHILE\n");return WHILE;}
+{INT}   { lex_print("INT\n");return TYPE_INT;}
+{FLOAT} { lex_print("FLOAT\n");return TYPE_FLOAT;}
+{READ} { lex_print("READ\n");return READ;}
+{LOG} { lex_print("LOG\n");return LOG;}
 
-{inteiros}              { print("inteiros\n");return NUM;     }
-{float}                 { print("float\n");return NUM;        }
-{id}                    { print("identificador \"%s\".\n", yytext);return ID; }
+{inteiros}              { 
+	lex_print("inteiros\n");
+	// yylval.val = strdup(yytext);
+	// yylval.length = yylen;
+	return NUM;
+}
+{float}                 { 
+	lex_print("float\n");
+	// yylval.val = strdup(yytext);
+	// yylval.length = yylen;
+	// return FLOAT;        
+}
+{id}                    {
+	lex_print("identificador \"%s\".\n", yytext);
+	create_and_store_token(yytext);
+	return ID;
+}
 {outro}                 { return yytext[0];  }
 %%
 
 int yywrap() {
 	return 1;
+}
+
+
+void create_and_store_token(char* token_lexeme) {
+	strncpy(tokenBuffer, yytext, MAXTOKENLEN);
+	lex_print("yytext: \"%s\". tb: \"%s\"\n", yytext, tokenBuffer);
 }
