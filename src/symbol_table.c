@@ -86,10 +86,12 @@ void create_new_scope_level() {
   tmpScope = (ScopeStack*) malloc(sizeof(ScopeStack));
 
   if (STACK_EMPTY(scopeStackHead)) {
-    tmpScope->level = 0; /* if its the first insertion, set as 0 level */
+    tmpScope->level = 0;
+    // printf("is empty");
   } else {
+    // printf("is not empty");
     ScopeInfo current_scope = get_current_scope();
-    tmpScope->level = current_scope.level + 1;
+    tmpScope->level = current_scope.level+1;
   }
   tmpScope->scopeID = gen_random_uniqueID();
   STACK_PUSH(scopeStackHead, tmpScope);

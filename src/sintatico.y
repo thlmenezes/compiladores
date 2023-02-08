@@ -76,8 +76,8 @@ programa
 ;
 
 bloco
-	: '{' lista_cmds '}' {
-		$$ = $2;
+	: '{' {create_new_scope_level();} lista_cmds '}' {
+		$$ = $3;
 	}
 ;
 
@@ -125,11 +125,14 @@ declare_var
 			YYABORT;
 		}
 
+    ScopeInfo current_scope = get_current_scope();
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
 			.symbolType=enumVariable,
 			.type = $1,
 			.name = $2,
+			.scopeID = current_scope.scopeID,
+			.scopeLevel = current_scope.level
 		};
 		addSymbol(newVar);
 
@@ -195,7 +198,7 @@ declar_argument:
 			.type = $1,
 			.name = $2,
 			.scopeID = current_scope.scopeID,
-			.scopeLevel = current_scope.level + 1
+			.scopeLevel = current_scope.level
 		};
 		addSymbol(newParam);
 
@@ -224,7 +227,7 @@ declare_func:
 	} declar_argument_list ')' bloco {
 
 		// probably wrong
-		// decrease_scope_level();
+		decrease_scope_level();
 
 		$$ = NULL;
 	}
