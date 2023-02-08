@@ -78,6 +78,8 @@ programa
 
 bloco
 	: '{' lista_cmds '}' {
+		savedName = copyString(tokenBuffer);
+		syn_print("[~~~~~~olha aqui %s ]\n", savedName);
 		$$ = $2;
 	}
 ;
@@ -111,7 +113,9 @@ single_command
 ;
 
 if_else
-	: IF '(' expression ')' command   %prec LOWER_THAN_ELSE
+	: IF '(' expression ')' command {
+		
+	}  %prec LOWER_THAN_ELSE
 	| IF '(' expression ')' command ELSE command
 ;
 
