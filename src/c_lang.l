@@ -30,6 +30,7 @@ INT     int
 FLOAT   float
 READ	  read
 LOG		  log
+RETURN	return
 
 %{
 	/* ignore */
@@ -51,12 +52,13 @@ outro	                .
 {comentario_multilinha} { lex_print("comentario multilinha\n");   }
 {espacos}			          ;
 
-{IF}    { lex_print("IF\n");return IF;}
-{ELSE}    { lex_print("ELSE\n");return ELSE;}
-{WHILE} { lex_print("WHILE\n");return WHILE;}
-{INT}   { lex_print("INT\n");return TYPE_INT;}
-{FLOAT} { lex_print("FLOAT\n");return TYPE_FLOAT;}
-{READ} { lex_print("READ\n");return READ;}
+{IF}    	{ lex_print("IF\n");return IF;}
+{ELSE}		{ lex_print("ELSE\n");return ELSE;}
+{WHILE} 	{ lex_print("WHILE\n");return WHILE;}
+{INT}   	{ lex_print("INT\n");return TYPE_INT;}
+{FLOAT} 	{ lex_print("FLOAT\n");return TYPE_FLOAT;}
+{READ} 		{ lex_print("READ\n");return READ;}
+{RETURN}	{ lex_print("RETURN\n");return RETURN;}
 
 {LOG} { 
 	lex_print("LOG\n");

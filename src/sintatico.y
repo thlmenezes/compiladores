@@ -27,6 +27,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 %token<str> WHILE
 %token<str> READ
 %token<str> LOG
+%token<str> RETURN
 
 %token<str> TYPE_INT
 %token<str> TYPE_FLOAT
@@ -42,7 +43,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 %nonassoc ELSE
 
 // Types definitions
-%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var DATA_TYPE expression func_call argument_list lista_cmds
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var DATA_TYPE expression func_call argument_list lista_cmds use_var_expression declare_func return_command
 
 %%
 /* Regras definindo a GLC e acoes correspondentes */
@@ -101,10 +102,12 @@ command
 single_command
 	: if_else { $$ = $1; }
 	| loop_while { $$ = $1; }
+	| declare_func { $$ = $1; }
 	| read_command ';' { $$ = $1; }
 	| write_command ';' { $$ = $1; }
 	| declare_var ';' { $$ = $1; }
 	| expression ';' { $$ = $1; }
+	| return_command ';' { $$ = $1; }
 	| ';' { $$ = NULL; }
 ;
 
@@ -157,7 +160,12 @@ write_command: LOG '(' expression
 
 expression
 	: NUM				{;}
-	| ID				{
+	| use_var_expression
+	| expression expression '+'			{;}
+	| func_call
+;
+
+use_var_expression: ID  {
 		if (!symbolExists(tokenBuffer)) {
 			syn_error("ERROR: using non-declared symbol \"%s\"\n", tokenBuffer);
 			// TODO: THROW
@@ -167,9 +175,8 @@ expression
 		}
 
 		// TODO: create AST node and return it
+		$$ = NULL;
 	}
-	| expression expression '+'			{;}
-	| func_call
 ;
 
 func_call: ID '(' argument_list ')';
@@ -178,6 +185,22 @@ argument_list
 	: %empty
 	| expression
 	| expression ',' argument_list
+;
+
+declar_argument_list
+	: %empty
+	| DATA_TYPE ID
+	| DATA_TYPE ID ',' declar_argument_list
+; 
+
+declare_func:
+	DATA_TYPE ID { $<str>$ = copyString(tokenBuffer); } '(' declar_argument_list ')' bloco {
+		$$ = NULL;
+	}
+;
+
+return_command:
+	RETURN expression { $$ = NULL; }
 ;
 
 %%
