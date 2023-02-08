@@ -148,7 +148,7 @@ DATA_TYPE
 ;
 
 loop_while: WHILE '(' expression ')' command;
-read_command: READ '(' expression ')';
+read_command: READ '(' ID ')';
 
 write_command: LOG '(' expression
 	{
@@ -215,5 +215,5 @@ int main() {
 yyerror (s) /* Called by yyparse on error */
 	char *s;
 {
-	syn_print ("Problema com a analise sintatica! %s\n", s);
+	syn_print ("ERROR: Problema com a analise sintatica! %s\n", s);
 }

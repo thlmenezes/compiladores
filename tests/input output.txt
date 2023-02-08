@@ -1,6 +1,6 @@
 {
-  int x;
+  int x = 3;
   read (x);
-
   log(x);
+
 }

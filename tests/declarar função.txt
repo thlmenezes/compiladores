@@ -2,6 +2,4 @@
   int soma4(int x) {
     return x 4 +;
   }
-
-  int result = soma4(3);
 }

@@ -1,7 +1,11 @@
 { 
-  var(34,asdasdx(),+  2.5);
-  gdfgfd(-.34);
+  int asdasdx() { return 1; }
+  int gdfgfd(int n) { return 1; }
+  int soma4(int x) {
+    return x 4 +;
+  }
+
+  var(34,asdasdx(),+  5);
+  gdfgfd(-34);
   varasdasd();
-  printf();
-  scanf();
 }
