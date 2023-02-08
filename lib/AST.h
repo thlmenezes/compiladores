@@ -19,9 +19,9 @@ typedef struct parserNode {
   struct parserNode* middleBranch;
   char* value;
   char* type;
-  char* astNodeClass;
-  char* tempReg;
-  char* cast;
+  // char* astNodeClass;
+  // char* tempReg;
+  // char* cast;
 } parserNode;
 
 /* struct used as param during the parsing of the source code to create new nodes */
