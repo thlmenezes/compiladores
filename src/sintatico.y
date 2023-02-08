@@ -15,9 +15,6 @@ parserNode* parser_ast = NULL;
 
 /* lexeme of identifier or reserved word */
 char tokenBuffer[MAXTOKENLEN+1];
-
-// lugar pra guardar nome
-static char * savedName;
 %}
 
 %union {
@@ -122,17 +119,17 @@ if_else
 declare_var
 	: DATA_TYPE ID
 		{
-			savedName = copyString(tokenBuffer);
+			$<str>$ = copyString(tokenBuffer);
 		}
 		'=' expression {
-		syn_print(".y has \"%s\"\n", savedName);
+		syn_print(".y has ($ 4) \"%s\"\n", $<str>3);
 
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
 			.symbolType=enumFunction,
 			// .type = $1->value,
 			.type = "INT",
-			.name = savedName,
+			.name = $<str>3,
 		};
 		addSymbol(newVar);
 	}

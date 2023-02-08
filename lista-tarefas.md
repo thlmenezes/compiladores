@@ -14,8 +14,19 @@
 
 ## Lista de tarefas:
 
-- [ ] Consertar os erros e problemas do sintático (importante não ignorar os warnings!)
-  - [ ] Consertar a gramática
-- [ ] Terminar a lógica básica da AST
-- [ ] Terminar a lógica da tabela de símbolos
-- [ ] Fazer tudo o que temos funcionar com a árvore e entrar na tabela de símbolos
+- [J] Terminar a lógica da tabela de símbolos & escopo**
+- [F] AST (C) input
+- [M] AST (C) output
+- [ ] AST (C) bloco*
+- [ ] AST (C) if/else
+- [ ] AST (C) while*
+- [ ] AST (C) declare_var
+- [ ] AST (C) set value to var
+- [ ] AST (E) expression
+- [ ] AST (E) func call**
+- [ ] AST (E) soma
+- [ ] AST (E) literal
+- [ ] AST (E) variável*
+- [ ] AST (C) (+sintaxe) definição função***
+
+* <- quanto mais mais complicado eu acho que vai ser

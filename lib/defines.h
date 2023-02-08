@@ -1,9 +1,15 @@
 #ifndef __DEFINES_H__
 #define __DEFINES_H__
 
+#ifndef TRUE
 #define TRUE 1
+#endif
+#ifndef FALSE
 #define FALSE 0
+#endif
+#ifndef NULL
 #define NULL 0
+#endif
 
 #define MAXTOKENLEN 10000
 /* tokenString array stores the lexeme of each token */
