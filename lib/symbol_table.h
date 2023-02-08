@@ -5,35 +5,38 @@
 #include <stdlib.h>
 #include "uthash.h" /* https://troydhanson.github.io/uthash/userguide.html#_hash_operations */
 
-enum SymbolType {
+enum SymbolType
+{
   enumFunction = 'F',
   enumVariable = 'V',
-  enumParameter = 'P' 
+  enumParameter = 'P'
 };
 
 // comentei alguns atributos pq não entendi a utilidade deles ainda. quando forem necessários só descomentar.
-typedef struct SymbolData {
+typedef struct SymbolData
+{
   int symbolID;
   char symbolType; /* F para funcao, V para variavel e P para paramentro */
-  char *type; /* tipo do ID (int, float, etc) */
-  char *name; /* nome literal */
+  char *type;      /* tipo do ID (int, float, etc) */
+  char *name;      /* nome literal */
 
   int scopeID;
   // nivel de escopo do simbolo no programa (0 é o nivel mais alto, 1 se tiver em um if especifico, e etc)
   int scopeLevel;
-  
+
   // if param
-  char* associatedFunction;       // nome da função da qual o parametro pertence (se for parametro)
+  char *associatedFunction; // nome da função da qual o parametro pertence (se for parametro)
   int associatedFunctionScopeId;
   // int paramIndex; // número de qual parametro da função esse é
 } SymbolData;
 
-typedef struct Symbol {
+typedef struct Symbol
+{
   int symbolID;
   char symbolType; /* F para funcao, V para variavel e P para paramentro */
-  char *type; /* tipo do ID (int, float, etc) */
-  char *name; /* nome literal */
- 
+  char *type;      /* tipo do ID (int, float, etc) */
+  char *name;      /* nome literal */
+
   int scopeID;
   // nivel de escopo do simbolo no programa (0 é o nivel mais alto, 1 se tiver em um if especifico, e etc)
   int scopeLevel;
@@ -43,7 +46,7 @@ typedef struct Symbol {
   int last_param;
 
   // if param
-  char* associatedFunction;
+  char *associatedFunction;
   int associatedFunctionScopeId;
 
   // chave de hash
@@ -51,9 +54,9 @@ typedef struct Symbol {
 } Symbol;
 
 // global symbol table
-Symbol* symbolTable;
+Symbol *symbolTable;
 
 void addSymbol(SymbolData newSymbolData);
-// TODO: print table
+void printSymbolTable();
 
 #endif // SYMBOL_TABLE_

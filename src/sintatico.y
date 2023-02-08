@@ -64,6 +64,7 @@ input: input line
 line: programa  { 
 	$$ = $1;
 	syn_print ("Programa sintaticamente correto!\n"); 
+	printSymbolTable();
 }
 ;
 

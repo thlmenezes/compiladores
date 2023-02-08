@@ -13,7 +13,7 @@ void addSymbol(SymbolData newSymbolData) {
     // printf("symbol %i already declared!\n", newSymbolData.name);
   
   if (newSymbolPtr != NULL) {
-    printf("symbol %s already declared!\n", newSymbolData.name);
+   printf("symbol %s already declared!\n", newSymbolData.name);
     return;
   }
 
@@ -51,4 +51,20 @@ void addSymbol(SymbolData newSymbolData) {
 
   // adiciona o novo elemento na tabela
   HASH_ADD_INT(symbolTable, symbolID, newSymbolPtr);
+}
+
+void printSymbol(Symbol* symbol) {
+  printf("\t- symbol name: \"%s\"\n", symbol->name);
+}
+
+void printSymbolTable() {
+  printf("==============================================\n");
+  printf("symbol table:\n");
+  
+  Symbol* current = symbolTable;
+  while (current != NULL) {
+    printSymbol(current);
+    current = (Symbol*) current->hh.next;
+  }
+  printf("==============================================\n");
 }
