@@ -60,4 +60,25 @@ void addSymbol(SymbolData newSymbolData);
 void printSymbolTable();
 int symbolExists(char* symbolName);
 
+// SCOPE
+typedef struct ScopeStack {
+  int level; /* numeric representation of scope level */
+  int scopeID; /* unique ID of scope */
+  struct ScopeStack *next;
+} ScopeStack; /* element of each scope */
+
+typedef struct ScopeInfo {
+  int level; /* numeric representation of scope level */
+  int scopeID; /* unique ID of scope */
+} ScopeInfo;
+
+/* returns the scope stack head, that is the current scope */
+ScopeInfo get_current_scope();
+
+/* add one level to current scope counting */
+void create_new_scope_level();
+
+/* removes one level of scope stack */
+void decrease_scope_level();
+
 #endif // SYMBOL_TABLE_

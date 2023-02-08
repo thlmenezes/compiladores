@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include "defines.h"
+#include "ustack.h"
 #include "symbol_table.h"
 
 Symbol* symbolTable = NULL;
+
+ScopeStack* scopeStackHead = NULL;
 
 void addSymbol(SymbolData newSymbolData) {
   Symbol* newSymbolPtr;
@@ -78,4 +81,42 @@ int symbolExists(char* symbolName) {
   }
 
   return exists;
+}
+
+
+void create_new_scope_level() {
+  ScopeStack *tmpScope;
+  tmpScope = (ScopeStack*)malloc(sizeof(ScopeStack));
+  if (STACK_EMPTY(scopeStackHead)) {
+    tmpScope->level = 0; /* if its the first insertion, set as 0 level */
+  } else {
+    ScopeInfo current_scope = get_current_scope();
+    tmpScope->level = current_scope.level + 1;
+  }
+  tmpScope->scopeID = gen_random_uniqueID();
+  STACK_PUSH(scopeStackHead, tmpScope);
+}
+
+void decrease_scope_level() {
+  ScopeStack *tmpStack;
+  STACK_POP(scopeStackHead, tmpStack);
+  free(tmpStack);
+}
+
+ScopeInfo get_current_scope() {
+  int current_scope = 0;
+  int uniqueID;
+  ScopeInfo scopeData;
+  if (!STACK_EMPTY(scopeStackHead)) { /* if scope stack is not empty, return current scope, return 0 otherwise */
+    ScopeStack *tmpStack;
+    STACK_POP(scopeStackHead, tmpStack);
+    current_scope = tmpStack->level;
+    uniqueID = tmpStack->scopeID;
+    STACK_PUSH(scopeStackHead, tmpStack);
+  } else {
+    uniqueID = gen_random_uniqueID();
+  }
+  scopeData.level = current_scope;
+  scopeData.scopeID = uniqueID;
+  return scopeData;
 }
