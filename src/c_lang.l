@@ -57,7 +57,12 @@ outro	                .
 {INT}   { lex_print("INT\n");return TYPE_INT;}
 {FLOAT} { lex_print("FLOAT\n");return TYPE_FLOAT;}
 {READ} { lex_print("READ\n");return READ;}
-{LOG} { lex_print("LOG\n");return LOG;}
+
+{LOG} { 
+	lex_print("LOG\n");
+	yylval.str = (char *) strdup(yytext);
+	return LOG;
+}
 
 {inteiros}              { 
 	lex_print("inteiros\n");

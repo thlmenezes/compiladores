@@ -75,8 +75,6 @@ programa
 
 bloco
 	: '{' lista_cmds '}' {
-		savedName = copyString(tokenBuffer);
-		syn_print("[~~~~~~olha aqui %s ]\n", savedName);
 		$$ = $2;
 	}
 ;
@@ -142,8 +140,14 @@ DATA_TYPE
 
 loop_while: WHILE '(' expression ')' command;
 read_command: READ '(' expression ')';
-write_command: LOG '(' expression ')';
 
+write_command: LOG '(' expression
+	{
+		$<str>3 = copyString(tokenBuffer);
+	} ')' {
+		printf("yoooooooooo tokenBuffer is %s/n", tokenBuffer);
+		/* syn_print("~~~~~~test write \"%s\"\n", $<str>3); */
+	};
 
 expression
 	: NUM				{;}
