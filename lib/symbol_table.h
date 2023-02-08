@@ -58,5 +58,6 @@ Symbol *symbolTable;
 
 void addSymbol(SymbolData newSymbolData);
 void printSymbolTable();
+int symbolExists(char* symbolName);
 
 #endif // SYMBOL_TABLE_

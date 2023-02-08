@@ -10,6 +10,6 @@ char * copyString(char * s)
     printf("Out of memory error!\n");
   else strcpy(t,s);
 
-  printf("copying \"%s\"\n", t);
+  // printf("copying \"%s\"\n", t);
   return t;
 }

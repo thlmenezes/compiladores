@@ -7,25 +7,21 @@ Symbol* symbolTable = NULL;
 void addSymbol(SymbolData newSymbolData) {
   Symbol* newSymbolPtr;
   HASH_FIND_INT(symbolTable, &newSymbolData.symbolID, newSymbolPtr);
-    // printf("symbol %s already declared!\n", &newSymbolData.type);
-    printf("addSymbol recieved \"%s\"\n", newSymbolData.name);
-    // printf("symbol %i already declared!\n", &newSymbolData.name);
-    // printf("symbol %i already declared!\n", newSymbolData.name);
-  
+  // printf("addSymbol recieved \"%s\"\n", newSymbolData.name);
+
   if (newSymbolPtr != NULL) {
-   printf("symbol %s already declared!\n", newSymbolData.name);
+    printf("symbol %s already declared!\n", newSymbolData.name);
     return;
   }
 
-  
   // se está adicionando um parametro a uma função, atualize a função
   if (newSymbolData.symbolType == enumParameter) {
     Symbol *func;
   
     for (func = symbolTable; func != (Symbol*) NULL; func = (Symbol*)(func -> hh.next))
     if (func->name == newSymbolData.associatedFunction && func->scopeID == newSymbolData.associatedFunctionScopeId) {
-        func->last_param++;
-        func->params_id_list[func->last_param] = newSymbolData.symbolID;
+      func->last_param++;
+      func->params_id_list[func->last_param] = newSymbolData.symbolID;
     }
   }
 
@@ -54,7 +50,7 @@ void addSymbol(SymbolData newSymbolData) {
 }
 
 void printSymbol(Symbol* symbol) {
-  printf("\t- symbol name: \"%s\"\n", symbol->name);
+  printf("\t- symbol name: \"%s\". type: \"%s\"\n", symbol->name, symbol->type);
 }
 
 void printSymbolTable() {
@@ -67,4 +63,19 @@ void printSymbolTable() {
     current = (Symbol*) current->hh.next;
   }
   printf("==============================================\n");
+}
+
+int symbolExists(char* symbolName) {
+  int exists = FALSE;
+
+  Symbol* current = symbolTable;
+  while (current != NULL) {
+    if (strcmp(symbolName, current->name) == 0) {
+      exists = TRUE;
+      break;
+    }
+    current = (Symbol*) current->hh.next;
+  }
+
+  return exists;
 }

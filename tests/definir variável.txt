@@ -1,3 +1,5 @@
 {
   int tvar = 0;
+  int tvar2 = tvar;
+  int tvar3 = 5;
 }

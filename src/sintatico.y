@@ -109,9 +109,7 @@ single_command
 ;
 
 if_else
-	: IF '(' expression ')' command {
-		
-	}  %prec LOWER_THAN_ELSE
+	: IF '(' expression ')' command %prec LOWER_THAN_ELSE
 	| IF '(' expression ')' command ELSE command
 ;
 
@@ -121,7 +119,14 @@ declare_var
 			$<str>$ = copyString(tokenBuffer);
 		}
 		'=' expression {
-		syn_print(".y has ($ 4) \"%s\"\n", $<str>3);
+			
+		if (symbolExists($<str>3)) {
+			syn_error("ERROR: re-declaring \"%s\"\n", $<str>3);
+			// TODO: THROW
+			// TODO: THROW
+			// TODO: THROW
+			// TODO: THROW
+		}
 
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
@@ -152,7 +157,17 @@ write_command: LOG '(' expression
 
 expression
 	: NUM				{;}
-	| ID				{;}
+	| ID				{
+		if (!symbolExists(tokenBuffer)) {
+			syn_error("ERROR: using non-declared symbol \"%s\"\n", tokenBuffer);
+			// TODO: THROW
+			// TODO: THROW
+			// TODO: THROW
+			// TODO: THROW
+		}
+
+		// TODO: create AST node and return it
+	}
 	| expression expression '+'			{;}
 	| func_call
 ;
