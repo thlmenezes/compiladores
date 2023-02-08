@@ -149,10 +149,10 @@ read_command: READ '(' ID ')';
 
 write_command: LOG '(' expression
 	{
-		$<str>3 = copyString(tokenBuffer);
+		$<str>$ = copyString(tokenBuffer);
 	} ')' {
-		printf("yoooooooooo tokenBuffer is %s/n", tokenBuffer);
-		/* syn_print("~~~~~~test write \"%s\"\n", $<str>3); */
+		printf("yoooooooooo tokenBuffer is %s/n", $<str>$);
+		/* syn_print("~~~~~~test write \"%s\"\n", $<str>$); */
 		$$ = NULL;
 	};
 
