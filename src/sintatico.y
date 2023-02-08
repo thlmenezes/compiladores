@@ -125,10 +125,7 @@ declare_var
 			
 		if (symbolExists($<str>3)) {
 			syn_error("ERROR: re-declaring \"%s\"\n", $<str>3);
-			// TODO: THROW
-			// TODO: THROW
-			// TODO: THROW
-			// TODO: THROW
+			YYABORT;
 		}
 
 		SymbolData newVar = {
@@ -156,6 +153,7 @@ write_command: LOG '(' expression
 	} ')' {
 		printf("yoooooooooo tokenBuffer is %s/n", tokenBuffer);
 		/* syn_print("~~~~~~test write \"%s\"\n", $<str>3); */
+		$$ = NULL;
 	};
 
 expression
@@ -168,10 +166,7 @@ expression
 use_var_expression: ID  {
 		if (!symbolExists(tokenBuffer)) {
 			syn_error("ERROR: using non-declared symbol \"%s\"\n", tokenBuffer);
-			// TODO: THROW
-			// TODO: THROW
-			// TODO: THROW
-			// TODO: THROW
+			YYABORT;
 		}
 
 		// TODO: create AST node and return it
