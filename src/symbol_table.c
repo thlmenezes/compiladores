@@ -35,13 +35,10 @@ void addSymbol(SymbolData newSymbolData) {
   newSymbolPtr->symbolType = newSymbolData.symbolType;
   newSymbolPtr->name = newSymbolData.name;
   
-  // TODO: fix this when scope added
-  // newSymbolPtr->scope = current_scope.level;
-  newSymbolPtr->scopeLevel = 0;
-  // newSymbolPtr->scopeID = current_scope.scopeID;
-  newSymbolPtr->scopeID = 0;
-  // TODO: fix this when scope added
-
+  // ScopeInfo current_scope = get_current_scope();
+  newSymbolPtr->scopeLevel = newSymbolData.scopeLevel;
+  newSymbolPtr->scopeID = newSymbolData.scopeID;
+  
   // newSymbolPtr->tacName = newSymbolData.tacName;
   // newSymbolPtr->line = newSymbolData.line;
   // newSymbolPtr->column = newSymbolData.column;
@@ -53,7 +50,7 @@ void addSymbol(SymbolData newSymbolData) {
 }
 
 void printSymbol(Symbol* symbol) {
-  printf("\t- symbol name: \"%s\". type: \"%s\"\n", symbol->name, symbol->type);
+  printf("\t- symbol name: \"%s\". type: \"%s\". kind: \"%s\". scopeLvl: %i\n", symbol->name, symbol->type, &symbol->symbolType, symbol->scopeLevel);
 }
 
 void printSymbolTable() {
@@ -86,7 +83,8 @@ int symbolExists(char* symbolName) {
 
 void create_new_scope_level() {
   ScopeStack *tmpScope;
-  tmpScope = (ScopeStack*)malloc(sizeof(ScopeStack));
+  tmpScope = (ScopeStack*) malloc(sizeof(ScopeStack));
+
   if (STACK_EMPTY(scopeStackHead)) {
     tmpScope->level = 0; /* if its the first insertion, set as 0 level */
   } else {

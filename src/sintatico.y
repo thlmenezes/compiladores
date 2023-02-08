@@ -127,11 +127,13 @@ declare_var
 
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
-			.symbolType=enumFunction,
+			.symbolType=enumVariable,
 			.type = $1,
 			.name = $2,
 		};
 		addSymbol(newVar);
+
+		$$ = NULL;
 	}
 ;
 
@@ -147,7 +149,7 @@ write_command: LOG '(' expression
 	{
 		$<str>3 = copyString(tokenBuffer);
 	} ')' {
-		printf("yoooooooooo tokenBuffer is %s/n", tokenBuffer);
+		// printf("yoooooooooo tokenBuffer is %s/n", tokenBuffer);
 		/* syn_print("~~~~~~test write \"%s\"\n", $<str>3); */
 		$$ = NULL;
 	};
@@ -186,12 +188,44 @@ declar_argument_list
 
 declar_argument:
 	DATA_TYPE identifier {
+    ScopeInfo current_scope = get_current_scope();
+		SymbolData newParam = {
+			.symbolID = globalCounterOfSymbols++,
+			.symbolType=enumParameter,
+			.type = $1,
+			.name = $2,
+			.scopeID = current_scope.scopeID,
+			.scopeLevel = current_scope.level + 1
+		};
+		addSymbol(newParam);
+
+		$$ = NULL;
 	}
 ;
 
 declare_func:
-	DATA_TYPE identifier '(' declar_argument_list ')' bloco {
-    create_new_scope_level();
+	DATA_TYPE identifier '('  {
+		// get scope
+    ScopeInfo current_scope = get_current_scope();
+
+		// add symbol
+		SymbolData newFunc = {
+			.symbolID = globalCounterOfSymbols++,
+			.symbolType = enumFunction,
+			.type = $1,
+			.name = $2,
+			.scopeID = current_scope.scopeID,
+			.scopeLevel = current_scope.level
+		};
+		addSymbol(newFunc);
+
+		// create scope for block and arglist
+		create_new_scope_level();
+	} declar_argument_list ')' bloco {
+
+		// probably wrong
+		// decrease_scope_level();
+
 		$$ = NULL;
 	}
 ;
