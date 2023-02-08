@@ -7,7 +7,7 @@ char * copyString(char * s)
   n = strlen(s)+1;
   t = malloc(n);
   if (t==NULL)
-    printf("Out of memory error at line %d\n");
+    printf("Out of memory error!\n");
   else strcpy(t,s);
 
   printf("copying \"%s\"\n", t);
