@@ -43,8 +43,8 @@ char tokenBuffer[MAXTOKENLEN+1];
 %nonassoc ELSE
 
 // Types definitions
-%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var DATA_TYPE expression func_call argument_list lista_cmds use_var_expression declare_func return_command
-
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument
+%type <str> DATA_TYPE variable
 %%
 /* Regras definindo a GLC e acoes correspondentes */
 /* neste nosso exemplo quase todas as acoes estao vazias */
@@ -112,40 +112,36 @@ single_command
 ;
 
 if_else
-	: IF '(' expression ')' command %prec LOWER_THAN_ELSE
+	: IF '(' expression ')' command %prec LOWER_THAN_ELSE {}
 	| IF '(' expression ')' command ELSE command
 ;
 
 declare_var
-	: DATA_TYPE ID
-		{
-			$<str>$ = copyString(tokenBuffer);
-		}
+	: DATA_TYPE variable
 		'=' expression {
-			
-		if (symbolExists($<str>3)) {
-			syn_error("ERROR: re-declaring \"%s\"\n", $<str>3);
+
+		if (symbolExists($2)) {
+			syn_error("ERROR: re-declaring \"%s\"\n", $2);
 			YYABORT;
 		}
 
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
 			.symbolType=enumFunction,
-			// .type = $1->value,
-			.type = "INT",
-			.name = $<str>3,
+			.type = $1,
+			.name = $2,
 		};
 		addSymbol(newVar);
 	}
 ;
 
 DATA_TYPE
-	: TYPE_INT
-	| TYPE_FLOAT
+	: TYPE_INT { $$ = "INT"; }
+	| TYPE_FLOAT { $$ = "FLOAT"; }
 ;
 
 loop_while: WHILE '(' expression ')' command;
-read_command: READ '(' ID ')';
+read_command: READ '(' variable ')';
 
 write_command: LOG '(' expression
 	{
@@ -163,9 +159,9 @@ expression
 	| func_call
 ;
 
-use_var_expression: ID  {
+use_var_expression: variable  {
 		if (!symbolExists(tokenBuffer)) {
-			syn_error("ERROR: using non-declared symbol \"%s\"\n", tokenBuffer);
+			syn_error("ERROR: using non-declared symbol \"%s\"\n", $1);
 			YYABORT;
 		}
 
@@ -184,9 +180,14 @@ argument_list
 
 declar_argument_list
 	: %empty
-	| DATA_TYPE ID
-	| DATA_TYPE ID ',' declar_argument_list
+	| declar_argument_list declar_argument {}
+	| declar_argument_list ',' declar_argument {} 
 ; 
+
+declar_argument:
+	DATA_TYPE variable {
+	}
+;
 
 declare_func:
 	DATA_TYPE ID { $<str>$ = copyString(tokenBuffer); } '(' declar_argument_list ')' bloco {
@@ -196,6 +197,10 @@ declare_func:
 
 return_command:
 	RETURN expression { $$ = NULL; }
+;
+
+variable:
+	ID  { $<str>$ = copyString(tokenBuffer); }
 ;
 
 %%

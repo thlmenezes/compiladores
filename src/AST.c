@@ -1,4 +1,4 @@
-#include "../lib/AST.h"
+#include "AST.h"
 
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
