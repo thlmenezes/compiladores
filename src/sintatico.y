@@ -44,7 +44,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 
 // Types definitions
 %type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument
-%type <str> DATA_TYPE variable
+%type <str> DATA_TYPE identifier
 %%
 /* Regras definindo a GLC e acoes correspondentes */
 /* neste nosso exemplo quase todas as acoes estao vazias */
@@ -117,7 +117,7 @@ if_else
 ;
 
 declare_var
-	: DATA_TYPE variable
+	: DATA_TYPE identifier
 		'=' expression {
 
 		if (symbolExists($2)) {
@@ -141,7 +141,7 @@ DATA_TYPE
 ;
 
 loop_while: WHILE '(' expression ')' command;
-read_command: READ '(' variable ')';
+read_command: READ '(' identifier ')';
 
 write_command: LOG '(' expression
 	{
@@ -159,7 +159,7 @@ expression
 	| func_call
 ;
 
-use_var_expression: variable  {
+use_var_expression: identifier  {
 		if (!symbolExists(tokenBuffer)) {
 			syn_error("ERROR: using non-declared symbol \"%s\"\n", $1);
 			YYABORT;
@@ -170,7 +170,7 @@ use_var_expression: variable  {
 	}
 ;
 
-func_call: ID '(' argument_list ')';
+func_call: identifier '(' argument_list ')';
 
 argument_list
 	: %empty
@@ -185,12 +185,13 @@ declar_argument_list
 ; 
 
 declar_argument:
-	DATA_TYPE variable {
+	DATA_TYPE identifier {
 	}
 ;
 
 declare_func:
-	DATA_TYPE ID { $<str>$ = copyString(tokenBuffer); } '(' declar_argument_list ')' bloco {
+	DATA_TYPE identifier '(' declar_argument_list ')' bloco {
+    create_new_scope_level();
 		$$ = NULL;
 	}
 ;
@@ -199,7 +200,7 @@ return_command:
 	RETURN expression { $$ = NULL; }
 ;
 
-variable:
+identifier:
 	ID  { $<str>$ = copyString(tokenBuffer); }
 ;
 
