@@ -116,9 +116,7 @@ if_else
 	| IF '(' expression ')' command ELSE command
 ;
 
-declare_var
-	: DATA_TYPE identifier
-		'=' expression {
+declare_var: DATA_TYPE identifier '=' expression {
 
 		if (symbolExists($2)) {
 			syn_error("ERROR: re-declaring \"%s\"\n", $2);
