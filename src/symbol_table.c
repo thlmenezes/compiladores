@@ -54,7 +54,7 @@ void printSymbol(Symbol* symbol) {
 }
 
 void printSymbolTable() {
-  printf("==============================================\n");
+  printf("==============================================================\n");
   printf("symbol table:\n");
   
   Symbol* current = symbolTable;
@@ -62,7 +62,7 @@ void printSymbolTable() {
     printSymbol(current);
     current = (Symbol*) current->hh.next;
   }
-  printf("==============================================\n");
+  printf("==============================================================\n");
 }
 
 int symbolExists(char* symbolName) {
