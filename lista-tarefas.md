@@ -15,16 +15,18 @@
 ## Lista de tarefas:
 
 - [J] Terminar a lógica da tabela de símbolos & escopo**
-- [ ] AST input/output
-- [ ] AST bloco*
-- [ ] AST if/else
-- [ ] AST while*
-- [ ] AST declare_var
-- [ ] AST expression
-- [ ] AST func call**
-- [ ] AST soma
-- [ ] AST literal
-- [ ] AST variável*
-- [ ] AST (+sintaxe) definição função***
+- [F] AST (C) input
+- [M] AST (C) output
+- [ ] AST (C) bloco*
+- [ ] AST (C) if/else
+- [ ] AST (C) while*
+- [ ] AST (C) declare_var
+- [ ] AST (C) set value to var
+- [ ] AST (E) expression
+- [ ] AST (E) func call**
+- [ ] AST (E) soma
+- [ ] AST (E) literal
+- [ ] AST (E) variável*
+- [ ] AST (C) (+sintaxe) definição função***
 
 * <- quanto mais mais complicado eu acho que vai ser
