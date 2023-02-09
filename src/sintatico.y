@@ -147,9 +147,9 @@ write_command: LOG '(' expression
 	{
 		$<str>$ = copyString(tokenBuffer);
 	} ')' {
-		printf("yoooooooooo tokenBuffer is %s/n", $<str>$);
+		printf("yoooooooooo I got %s, and %s\n", $1, $3);
 		/* syn_print("~~~~~~test write \"%s\"\n", $<str>$); */
-		$$ = NULL;
+		/* $$ = NULL; */
 	};
 
 expression
@@ -200,7 +200,8 @@ return_command:
 ;
 
 variable:
-	ID  { $<str>$ = copyString(tokenBuffer); }
+	ID  { $<str>$ = copyString(tokenBuffer); 
+		printf("teste c/ %s\n", $$);}
 ;
 
 %%
