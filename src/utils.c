@@ -13,3 +13,10 @@ char * copyString(char * s)
   // printf("copying \"%s\"\n", t);
   return t;
 }
+
+int gen_random_uniqueID() {
+  int result = 0, low_num = 10000, hi_num = 89999;
+
+  result = (rand() % hi_num) + low_num;
+  return result;
+}

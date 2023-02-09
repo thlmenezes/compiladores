@@ -44,7 +44,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 
 // Types definitions
 %type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument
-%type <str> DATA_TYPE variable
+%type <str> DATA_TYPE identifier
 %%
 /* Regras definindo a GLC e acoes correspondentes */
 /* neste nosso exemplo quase todas as acoes estao vazias */
@@ -76,8 +76,8 @@ programa
 ;
 
 bloco
-	: '{' lista_cmds '}' {
-		$$ = $2;
+	: '{' {create_new_scope_level();} lista_cmds '}' {
+		$$ = $3;
 	}
 ;
 
@@ -116,22 +116,25 @@ if_else
 	| IF '(' expression ')' command ELSE command
 ;
 
-declare_var
-	: DATA_TYPE variable
-		'=' expression {
+declare_var: DATA_TYPE identifier '=' expression {
 
 		if (symbolExists($2)) {
 			syn_error("ERROR: re-declaring \"%s\"\n", $2);
 			YYABORT;
 		}
 
+    ScopeInfo current_scope = get_current_scope();
 		SymbolData newVar = {
 			.symbolID = globalCounterOfSymbols++,
-			.symbolType=enumFunction,
+			.symbolType=enumVariable,
 			.type = $1,
 			.name = $2,
+			.scopeID = current_scope.scopeID,
+			.scopeLevel = current_scope.level
 		};
 		addSymbol(newVar);
+
+		$$ = NULL;
 	}
 ;
 
@@ -141,15 +144,15 @@ DATA_TYPE
 ;
 
 loop_while: WHILE '(' expression ')' command;
-read_command: READ '(' variable ')';
+read_command: READ '(' identifier ')';
 
 write_command: LOG '(' expression
 	{
 		$<str>$ = copyString(tokenBuffer);
 	} ')' {
-		printf("yoooooooooo I got %s, and %s\n", $1, $3);
-		/* syn_print("~~~~~~test write \"%s\"\n", $<str>$); */
-		/* $$ = NULL; */
+		// printf("yoooooooooo tokenBuffer is %s/n", tokenBuffer);
+		/* syn_print("~~~~~~test write \"%s\"\n", $<str>3); */
+		$$ = NULL;
 	};
 
 expression
@@ -159,7 +162,7 @@ expression
 	| func_call
 ;
 
-use_var_expression: variable  {
+use_var_expression: identifier  {
 		if (!symbolExists(tokenBuffer)) {
 			syn_error("ERROR: using non-declared symbol \"%s\"\n", $1);
 			YYABORT;
@@ -170,7 +173,7 @@ use_var_expression: variable  {
 	}
 ;
 
-func_call: ID '(' argument_list ')';
+func_call: identifier '(' argument_list ')';
 
 argument_list
 	: %empty
@@ -185,12 +188,45 @@ declar_argument_list
 ; 
 
 declar_argument:
-	DATA_TYPE variable {
+	DATA_TYPE identifier {
+    ScopeInfo current_scope = get_current_scope();
+		SymbolData newParam = {
+			.symbolID = globalCounterOfSymbols++,
+			.symbolType=enumParameter,
+			.type = $1,
+			.name = $2,
+			.scopeID = current_scope.scopeID,
+			.scopeLevel = current_scope.level
+		};
+		addSymbol(newParam);
+
+		$$ = NULL;
 	}
 ;
 
 declare_func:
-	DATA_TYPE ID { $<str>$ = copyString(tokenBuffer); } '(' declar_argument_list ')' bloco {
+	DATA_TYPE identifier '('  {
+		// get scope
+    ScopeInfo current_scope = get_current_scope();
+
+		// add symbol
+		SymbolData newFunc = {
+			.symbolID = globalCounterOfSymbols++,
+			.symbolType = enumFunction,
+			.type = $1,
+			.name = $2,
+			.scopeID = current_scope.scopeID,
+			.scopeLevel = current_scope.level
+		};
+		addSymbol(newFunc);
+
+		// create scope for block and arglist
+		create_new_scope_level();
+	} declar_argument_list ')' bloco {
+
+		// probably wrong
+		decrease_scope_level();
+
 		$$ = NULL;
 	}
 ;
@@ -199,9 +235,8 @@ return_command:
 	RETURN expression { $$ = NULL; }
 ;
 
-variable:
-	ID  { $<str>$ = copyString(tokenBuffer); 
-		printf("teste c/ %s\n", $$);}
+identifier:
+	ID  { $<str>$ = copyString(tokenBuffer); }
 ;
 
 %%

@@ -8,7 +8,7 @@ parserNode* add_ast_node(astParam astParam) {
       node->leftBranch = astParam.leftBranch;
       node->middleBranch = astParam.middleBranch;
       node->rightBranch = astParam.rightBranch;
-      /* node->astNodeClass = astParam.astNodeClass; */
+      // node->astNodeClass = astParam.astNodeClass;
       node->value = astParam.value;
       node->type = astParam.type;
       break;
@@ -16,15 +16,12 @@ parserNode* add_ast_node(astParam astParam) {
       node->leftBranch = astParam.leftBranch;
       node->middleBranch = NULL;
       node->rightBranch = astParam.rightBranch;
-      /* node->astNodeClass = astParam.astNodeClass; */
-      node->value = NULL;
-      node->type = NULL;
+      // node->astNodeClass = astParam.astNodeClass;
       break;
-    case enumLeftRightValueBranch:
       node->leftBranch = astParam.leftBranch;
       node->middleBranch = NULL;
       node->rightBranch = astParam.rightBranch;
-      /* node->astNodeClass = astParam.astNodeClass; */
+      // node->astNodeClass = astParam.astNodeClass;
       node->value = astParam.value;
       node->type = astParam.type;
       break;
@@ -32,15 +29,12 @@ parserNode* add_ast_node(astParam astParam) {
       node->leftBranch = astParam.leftBranch;
       node->middleBranch = NULL;
       node->rightBranch = NULL;
-      /* node->astNodeClass = astParam.astNodeClass; */
-      node->value = astParam.value;
-      node->type = astParam.type;
+      // node->astNodeClass = astParam.astNodeClass;
       break;
-    case enumValueTypeOnly:
       node->leftBranch = NULL;
       node->middleBranch = NULL;
       node->rightBranch = NULL;
-      /* node->astNodeClass = astParam.astNodeClass; */
+      // node->astNodeClass = astParam.astNodeClass;
       node->value = astParam.value;
       node->type = astParam.type;
       break;
