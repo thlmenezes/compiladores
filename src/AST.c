@@ -49,3 +49,7 @@ parserNode* add_ast_node(astParam astParam) {
   }
   return node;
 }
+
+parserNode* createLiteralIntNode(char* numStr) {
+  return NULL;
+}
