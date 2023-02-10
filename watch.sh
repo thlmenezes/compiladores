@@ -1,4 +1,4 @@
-#!/bin/env bash
+
 
 defaultWatch() {
   local FILE="$1"

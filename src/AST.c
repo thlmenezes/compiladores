@@ -47,3 +47,7 @@ parserNode* add_ast_node(astParam astParam) {
 parserNode* createLiteralIntNode(char* numStr) {
   return NULL;
 }
+
+void printLiteralIntNode(parserNode* numStr) {
+  
+}

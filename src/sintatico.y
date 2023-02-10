@@ -43,7 +43,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 %nonassoc ELSE
 
 // Types definitions
-%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument
 %type <str> DATA_TYPE identifier
 %%
 /* Regras definindo a GLC e acoes correspondentes */
@@ -148,19 +148,26 @@ read_command: READ '(' identifier ')';
 
 write_command: LOG '(' expression
 	{
-		$<str>$ = copyString(tokenBuffer);
+		// printf("yoooooooooo tokenBuffer is %s/n", $3);
+		
 	} ')' {
-		// printf("yoooooooooo tokenBuffer is %s/n", tokenBuffer);
-		/* syn_print("~~~~~~test write \"%s\"\n", $<str>3); */
 		$$ = NULL;
 	};
 
 expression
-	: NUM				{;}
+	: literal_expression
 	| use_var_expression
-	| expression expression '+'			{;}
+	| expression expression '+'			{
+		syn_print("essa string %d, %d\n", $1, $2);
+	}
 	| func_call
 ;
+
+literal_expression 
+	: NUM 			{
+		syn_print("ihaaaaa %s\n", $1);
+		$$ = createLiteralIntNode($1); 
+	}
 
 use_var_expression: identifier  {
 		if (!symbolExists(tokenBuffer)) {
@@ -213,8 +220,8 @@ declare_func:
 		SymbolData newFunc = {
 			.symbolID = globalCounterOfSymbols++,
 			.symbolType = enumFunction,
-			.type = $0,
-			.name = $1,
+			.type = $1,
+			.name = $2,
 			.scopeID = current_scope.scopeID,
 			.scopeLevel = current_scope.level
 		};

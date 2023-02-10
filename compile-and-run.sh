@@ -1,5 +1,5 @@
-#!/bin/env bash
+
 
 make clean
 make
-./run-test.sh "./tests/declarar função.txt"
+./run-test.sh "./tests/literal vazio.txt"

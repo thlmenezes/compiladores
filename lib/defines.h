@@ -16,9 +16,9 @@
 extern char tokenBuffer[MAXTOKENLEN+1];
 
 // fake print with same function type as printf
-int fake_printf(const char *format, ...);
+int printf(const char *format, ...);
 // // for lex to print, use this define
-#define lex_print fake_printf
+#define lex_print printf
 #define syn_print printf
 #define syn_error printf
 // for lex to not print, use this define

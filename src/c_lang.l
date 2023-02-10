@@ -68,8 +68,7 @@ outro	                .
 
 {inteiros}              { 
 	lex_print("inteiros\n");
-	// yylval.val = strdup(yytext);
-	// yylval.length = yylen;
+	yylval.str = (char *) strdup(yytext);
 	return NUM;
 }
 {float}                 { 
