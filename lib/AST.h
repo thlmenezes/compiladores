@@ -37,6 +37,6 @@ typedef struct astParam {
 
 /* returns one node of the AST based on astParam */
 parserNode* add_ast_node(astParam astParam);
-
+parserNode* createLiteralIntNode(char* numStr);
 
 #endif // AST_

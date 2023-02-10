@@ -213,8 +213,8 @@ declare_func:
 		SymbolData newFunc = {
 			.symbolID = globalCounterOfSymbols++,
 			.symbolType = enumFunction,
-			.type = $1,
-			.name = $2,
+			.type = $0,
+			.name = $1,
 			.scopeID = current_scope.scopeID,
 			.scopeLevel = current_scope.level
 		};
