@@ -1,53 +1,28 @@
 #include "AST.h"
+#include "utils.h"
+#include <stdlib.h>
+#include "defines.h"
 
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
 
-  switch (astParam.nodeType) {
-    case enumLeftRightMiddleBranch:
-      node->leftBranch = astParam.leftBranch;
-      node->middleBranch = astParam.middleBranch;
-      node->rightBranch = astParam.rightBranch;
-      // node->astNodeClass = astParam.astNodeClass;
-      node->value = astParam.value;
-      node->type = astParam.type;
-      break;
-    case enumLeftRightBranch:
-      node->leftBranch = astParam.leftBranch;
-      node->middleBranch = NULL;
-      node->rightBranch = astParam.rightBranch;
-      // node->astNodeClass = astParam.astNodeClass;
-      break;
-      node->leftBranch = astParam.leftBranch;
-      node->middleBranch = NULL;
-      node->rightBranch = astParam.rightBranch;
-      // node->astNodeClass = astParam.astNodeClass;
-      node->value = astParam.value;
-      node->type = astParam.type;
-      break;
-    case enumValueLeftBranch:
-      node->leftBranch = astParam.leftBranch;
-      node->middleBranch = NULL;
-      node->rightBranch = NULL;
-      // node->astNodeClass = astParam.astNodeClass;
-      break;
-      node->leftBranch = NULL;
-      node->middleBranch = NULL;
-      node->rightBranch = NULL;
-      // node->astNodeClass = astParam.astNodeClass;
-      node->value = astParam.value;
-      node->type = astParam.type;
-      break;
-    default:
-      break;
-  }
+  // switch (astParam.nodeType) {}
   return node;
 }
 
 parserNode* createLiteralIntNode(char* numStr) {
-  return NULL;
+  parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
+  
+  node->leftBranch = NULL;
+  node->middleBranch = NULL;
+  node->rightBranch = NULL;
+
+  node->value = copyString(numStr);
+  node->type = LITERAL_INT_TYPE;
+
+  return node;
 }
 
-void printLiteralIntNode(parserNode* numStr) {
-  
+void printLiteralIntNode(parserNode* node) {
+  syn_print("TEST. value %s. type: %s\n", node->value, node->type);
 }

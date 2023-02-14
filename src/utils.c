@@ -1,4 +1,6 @@
 #include "defines.h"
+#include <string.h>
+#include <stdlib.h>
 
 char * copyString(char * s)
 { int n;
@@ -19,4 +21,9 @@ int gen_random_uniqueID() {
 
   result = (rand() % hi_num) + low_num;
   return result;
+}
+
+int parseInt(char* s) {
+  // TODO: implementar
+  return 88;
 }

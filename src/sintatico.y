@@ -4,8 +4,8 @@
 %{
 #include <stdlib.h>
 #include <stdio.h> 
-#include "../lib/AST.h"
-#include "../lib/symbol_table.h"
+#include "AST.h"
+#include "symbol_table.h"
 #include "defines.h"
 #include "utils.h"
 
@@ -161,14 +161,17 @@ expression
 	: literal_expression
 	| use_var_expression
 	| expression expression '+'			{
-		syn_print("essa string %d, %d\n", $1, $2);
+		// syn_print("essa string %d, %d\n", $1, $2);
 	}
 	| func_call
 ;
 
 literal_expression 
 	: NUM 			{
-		$$ = createLiteralIntNode($1); 
+		// parserNode* node = createLiteralIntNode($1);
+		// printLiteralIntNode(node);
+		// $$ = node;
+		$$ = createLiteralIntNode($1);
 	}
 
 use_var_expression: identifier  {
