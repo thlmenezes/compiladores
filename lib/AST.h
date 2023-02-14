@@ -19,7 +19,7 @@ typedef struct parserNode {
   struct parserNode* middleBranch;
   char* value;
   char* type;
-  // char* astNodeClass;
+  char* astNodeClass;
   // char* tempReg;
   // char* cast;
 } parserNode;
@@ -34,6 +34,8 @@ typedef struct astParam {
   char* astNodeClass;
   enum astNodeType nodeType;
 } astParam;
+
+void print_parser_ast(parserNode *node, int level);
 
 /* returns one node of the AST based on astParam */
 parserNode* add_ast_node(astParam astParam);

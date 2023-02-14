@@ -9,6 +9,8 @@
 #include "defines.h"
 #include "utils.h"
 
+extern int yylex();
+
 int globalCounterOfSymbols = 1;
 
 parserNode* parser_ast = NULL;
@@ -56,7 +58,10 @@ entryPoint: input {
 }
 ;
 
-input: input line 
+input: input line {
+	astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="INPUT_STATEMENT" };
+    $$ = add_ast_node(astP);
+	}
 	| %empty {
 		$$ = NULL; 
 	}
@@ -89,8 +94,9 @@ lista_cmds
 		$$ = NULL; 
 	}
 	| command lista_cmds {
-		$$ = $1;
-	}	
+		astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="COMMANDS_LIST" };
+    	$$ = add_ast_node(astP);
+	}
 ;
 
 command
@@ -137,7 +143,8 @@ declare_var: DATA_TYPE identifier '=' expression {
 		};
 		addSymbol(newVar);
 
-		$$ = NULL;
+		astParam astP = { .type=$1, .value = $2, .leftBranch=$4, .nodeType = enumValueLeftBranch, .astNodeClass="DECLARE_VARIABLE" };
+    	$$ = add_ast_node(astP);
 	}
 ;
 
@@ -147,14 +154,16 @@ DATA_TYPE
 ;
 
 loop_while: WHILE '(' expression ')' command;
-read_command: READ '(' identifier ')';
+read_command: READ '(' identifier ')' {
+	astParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="READ_COMMAND" };
+    $$ = add_ast_node(astP);
+	printf("yoooooooooo tokenBuffer is %s/n", $1);
+};
 
-write_command: LOG '(' expression
-	{
-		// printf("yoooooooooo tokenBuffer is %s/n", $3);
-		
-	} ')' {
-		$$ = NULL;
+write_command: LOG '(' expression ')' {
+	astParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="LOG_COMMAND" };
+	$$ = add_ast_node(astP);
+	printf("yoooooooooo 2 tokenBuffer is %s/n", $1);
 	};
 
 expression
@@ -236,7 +245,7 @@ declare_func:
 		// probably wrong
 		decrease_scope_level();
 
-		$$ = NULL;
+		$$ = $1;
 	}
 ;
 
@@ -254,7 +263,12 @@ identifier:
 
 int main() {
 	parser_ast = NULL;
-	return yyparse ();
+
+	yyparse();
+
+	printf("\n=================== Parser AST ====================\n\n");
+    print_parser_ast(parser_ast, 0);
+	return 0;
 }
 
 yyerror (s) /* Called by yyparse on error */
