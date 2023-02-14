@@ -76,8 +76,11 @@ programa
 ;
 
 bloco
-	: '{' {create_new_scope_level();} lista_cmds '}' {
+	: '{' {
+		create_new_scope_level();
+	} lista_cmds '}' {
 		$$ = $3;
+		decrease_scope_level();
 	}
 ;
 
@@ -165,7 +168,6 @@ expression
 
 literal_expression 
 	: NUM 			{
-		syn_print("ihaaaaa %s\n", $1);
 		$$ = createLiteralIntNode($1); 
 	}
 

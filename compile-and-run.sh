@@ -2,4 +2,4 @@
 
 make clean
 make
-./run-test.sh "./tests/literal vazio.txt"
+./run-test.sh "./tests/definir variável.txt"

@@ -1,5 +1,15 @@
 {
   int tvar = 0;
   int tvar2 = tvar;
+
+  int inc1(int n) {
+    int result = n 1 +;
+    return result;
+  }
+
   int tvar3 = 5;
+ 
+  {
+    int different = 3;
+  }
 }

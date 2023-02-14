@@ -50,7 +50,7 @@ void addSymbol(SymbolData newSymbolData) {
 }
 
 void printSymbol(Symbol* symbol) {
-  printf("\t- symbol name: \"%s\". type: \"%s\". kind: \"%s\". scopeLvl: %i\n", symbol->name, symbol->type, &symbol->symbolType, symbol->scopeLevel);
+  printf("\t- symbol name: \"%s\". type: \"%s\". kind: \"%s\". scopeLvl: %i. scope: %i\n", symbol->name, symbol->type, &symbol->symbolType, symbol->scopeLevel, symbol->scopeID);
 }
 
 void printSymbolTable() {
