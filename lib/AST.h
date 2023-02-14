@@ -27,7 +27,7 @@ typedef struct parserNode {
 } parserNode;
 
 /* struct used as param during the parsing of the source code to create new nodes */
-typedef struct astParam {
+typedef struct AstParam {
   struct parserNode* rightBranch;
   struct parserNode* leftBranch;
   struct parserNode* middleBranch;
@@ -35,12 +35,12 @@ typedef struct astParam {
   char* type;
   char* astNodeClass;
   enum astNodeType nodeType;
-} astParam;
+} AstParam;
 
 void print_parser_ast(parserNode *node, int level);
 
-/* returns one node of the AST based on astParam */
-parserNode* add_ast_node(astParam astParam);
+/* returns one node of the AST based on AstParam */
+parserNode* add_ast_node(AstParam AstParam);
 parserNode* createLiteralIntNode(char* numStr);
 void printLiteralIntNode(parserNode* node);
  

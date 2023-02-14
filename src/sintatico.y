@@ -59,7 +59,7 @@ entryPoint: input {
 ;
 
 input: input line {
-	astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="INPUT_STATEMENT" };
+	AstParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="INPUT_STATEMENT" };
     $$ = add_ast_node(astP);
 	}
 	| %empty {
@@ -94,7 +94,7 @@ lista_cmds
 		$$ = NULL; 
 	}
 	| command lista_cmds {
-		astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="COMMANDS_LIST" };
+		AstParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="COMMANDS_LIST" };
     	$$ = add_ast_node(astP);
 	}
 ;
@@ -143,7 +143,7 @@ declare_var: DATA_TYPE identifier '=' expression {
 		};
 		addSymbol(newVar);
 
-		astParam astP = { .type=$1, .value = $2, .leftBranch=$4, .nodeType = enumValueLeftBranch, .astNodeClass="DECLARE_VARIABLE" };
+		AstParam astP = { .type=$1, .value = $2, .leftBranch=$4, .nodeType = enumValueLeftBranch, .astNodeClass="DECLARE_VARIABLE" };
     	$$ = add_ast_node(astP);
 	}
 ;
@@ -155,13 +155,13 @@ DATA_TYPE
 
 loop_while: WHILE '(' expression ')' command;
 read_command: READ '(' identifier ')' {
-	astParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="READ_COMMAND" };
+	AstParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="READ_COMMAND" };
     $$ = add_ast_node(astP);
 	// printf("yoooooooooo tokenBuffer is %s/n", $1);
 };
 
 write_command: LOG '(' expression ')' {
-	astParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="LOG_COMMAND" };
+	AstParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="LOG_COMMAND" };
 	$$ = add_ast_node(astP);
 	// printf("yoooooooooo 2 tokenBuffer is %s/n", $1);
 	};
@@ -176,6 +176,7 @@ expression
 math_expression:
 	expression expression math_operator {
 		syn_print("essa string %s\n", $3);
+
 	}
 ;
 math_operator
