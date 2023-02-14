@@ -46,7 +46,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 %nonassoc ELSE
 
 // Types definitions
-%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument math_expression
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument declar_argument_list math_expression
 %type <str> DATA_TYPE identifier math_operator
 %%
 /* Regras definindo a GLC e acoes correspondentes */
@@ -176,8 +176,6 @@ expression
 
 math_expression:
 	expression expression math_operator {
-		syn_print("essa string %s\n", $3);
-
 		AstParam nodeParam = {
 			.nodeType = enumLeftRightBranch,
 			.astNodeClass = "MATH_EXPRESSION",
@@ -225,9 +223,17 @@ argument_list
 ;
 
 declar_argument_list
-	: %empty
-	| declar_argument_list declar_argument {}
-	| declar_argument_list ',' declar_argument {} 
+	: %empty { $$ = NULL; }
+	| declar_argument { $$ = $1; }
+	| declar_argument_list ',' declar_argument {
+		AstParam nodeParam = {
+			.nodeType = enumLeftRightBranch,
+			.astNodeClass = "DEC_ARG_LIST",
+			.leftBranch = $1,
+			.rightBranch = $3,
+		};
+		$$ = add_ast_node(nodeParam);
+	} 
 ; 
 
 declar_argument:
@@ -243,7 +249,13 @@ declar_argument:
 		};
 		addSymbol(newParam);
 
-		$$ = NULL;
+		AstParam nodeParam = {
+			.nodeType = enumValueTypeOnly,
+			.astNodeClass = "DEC_ARG",
+			.type = $1,
+			.value = $2
+		};
+		$$ = add_ast_node(nodeParam);
 	}
 ;
 
@@ -269,7 +281,16 @@ declare_func:
 
 		decrease_scope_level();
 
-		$$ = NULL;
+		AstParam nodeParam = {
+			.nodeType = enumLeftRightBranch,
+			.astNodeClass = "FUNCTION_DECL",
+			.type = $1,
+			.value = $2,
+			.leftBranch = $5,
+			.rightBranch = $7,
+		};
+
+		$$ = add_ast_node(nodeParam);
 	}
 ;
 

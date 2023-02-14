@@ -1,7 +1,6 @@
 {
   int soma4(int x) {
     return x 4 +;
-    int z = 0;
   }
 
   int num = 60;
