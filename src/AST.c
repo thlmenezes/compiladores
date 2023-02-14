@@ -6,7 +6,40 @@
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
 
-  // switch (astParam.nodeType) {}
+  switch (astParam.nodeType) {
+    case enumLeftRightMiddleBranch:
+      node->leftBranch = astParam.leftBranch;
+      node->middleBranch = astParam.middleBranch;
+      node->rightBranch = astParam.rightBranch;
+      // node->astNodeClass = astParam.astNodeClass;
+      node->value = astParam.value;
+      node->type = astParam.type;
+      break;
+    case enumLeftRightBranch:
+      node->leftBranch = astParam.leftBranch;
+      node->rightBranch = astParam.rightBranch;
+      node->astNodeClass = astParam.astNodeClass;
+      node->value = NULL;
+      node->type = NULL;
+      break;
+    case enumValueLeftBranch:
+      node->leftBranch = astParam.leftBranch;
+      node->middleBranch = NULL;
+      node->rightBranch = NULL;
+      node->astNodeClass = astParam.astNodeClass;
+      node->value = astParam.value;
+      node->type = astParam.type;
+      break;
+    case enumValueTypeOnly:
+      node->leftBranch = NULL;
+      node->rightBranch = NULL;
+      node->astNodeClass = astParam.astNodeClass;
+      node->value = astParam.value;
+      node->type = astParam.type;
+      break;
+    default:
+      break;
+  }
   return node;
 }
 
@@ -21,6 +54,33 @@ parserNode* createLiteralIntNode(char* numStr) {
   node->type = LITERAL_INT_TYPE;
 
   return node;
+}
+
+void print_parser_ast(parserNode *node, int level)
+{
+  if (node)
+  {
+      for (int aux = level; aux > 0; aux--)
+      {
+        printf("%s", "~");
+      }
+      printf("> ");
+      printf("class: %s - ", node->astNodeClass);
+      if (node->type != NULL)
+      {
+        printf("type: %s - ", node->type);
+      }
+      if (node->value != NULL)
+      {
+        printf("value: %s - ", node->value);
+      }
+      {
+        // printf("CAST: %s - ", node->cast);
+      }
+      printf("\n");
+      print_parser_ast(node->leftBranch, level + 1);
+      print_parser_ast(node->rightBranch, level + 1);
+  }
 }
 
 void printLiteralIntNode(parserNode* node) {

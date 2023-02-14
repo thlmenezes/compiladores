@@ -16,11 +16,11 @@
 
 - [J] Terminar a lógica da tabela de símbolos & escopo**
 - [F] AST (C) input
-- [M] AST (C) output
+- [F] AST (C) output
 - [ ] AST (C) bloco*
 - [ ] AST (C) if/else
 - [ ] AST (C) while*
-- [ ] AST (C) declare_var
+- [F] AST (C) declare_var
 - [ ] AST (C) set value to var
 - [ ] AST (E) expression
 - [ ] AST (E) func call**
