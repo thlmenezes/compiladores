@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LITERAL_INT_TYPE "lit_int"
-
 enum astNodeType {
   enumLeftRightMiddleBranch, // (usa os 3 galhos da arvore)
   enumLeftRightBranch,      

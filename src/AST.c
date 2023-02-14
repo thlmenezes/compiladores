@@ -2,40 +2,41 @@
 #include "utils.h"
 #include <stdlib.h>
 #include "defines.h"
+#include "types.h"
 
-parserNode* add_ast_node(AstParam AstParam) {
+parserNode* add_ast_node(AstParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
 
-  switch (AstParam.nodeType) {
+  switch (astParam.nodeType) {
     case enumLeftRightMiddleBranch:
-      node->leftBranch = AstParam.leftBranch;
-      node->middleBranch = AstParam.middleBranch;
-      node->rightBranch = AstParam.rightBranch;
-      // node->astNodeClass = AstParam.astNodeClass;
-      node->value = AstParam.value;
-      node->type = AstParam.type;
+      node->leftBranch = astParam.leftBranch;
+      node->middleBranch = astParam.middleBranch;
+      node->rightBranch = astParam.rightBranch;
+      node->astNodeClass = copyString(astParam.astNodeClass);
+      node->value = copyString(astParam.value);
+      node->type = astParam.type;
       break;
     case enumLeftRightBranch:
-      node->leftBranch = AstParam.leftBranch;
-      node->rightBranch = AstParam.rightBranch;
-      node->astNodeClass = AstParam.astNodeClass;
-      node->value = NULL;
-      node->type = NULL;
+      node->leftBranch = astParam.leftBranch;
+      node->rightBranch = astParam.rightBranch;
+      node->astNodeClass = copyString(astParam.astNodeClass);
+      node->value = astParam.value;
+      node->type = astParam.type;
       break;
     case enumValueLeftBranch:
-      node->leftBranch = AstParam.leftBranch;
+      node->leftBranch = astParam.leftBranch;
       node->middleBranch = NULL;
       node->rightBranch = NULL;
-      node->astNodeClass = AstParam.astNodeClass;
-      node->value = AstParam.value;
-      node->type = AstParam.type;
+      node->astNodeClass = copyString(astParam.astNodeClass);
+      node->value = copyString(astParam.value);
+      node->type = astParam.type;
       break;
     case enumValueTypeOnly:
       node->leftBranch = NULL;
       node->rightBranch = NULL;
-      node->astNodeClass = AstParam.astNodeClass;
-      node->value = AstParam.value;
-      node->type = AstParam.type;
+      node->astNodeClass = copyString(astParam.astNodeClass);
+      node->value = copyString(astParam.value);
+      node->type = astParam.type;
       break;
     default:
       break;
@@ -51,7 +52,8 @@ parserNode* createLiteralIntNode(char* numStr) {
   node->rightBranch = NULL;
 
   node->value = copyString(numStr);
-  node->type = LITERAL_INT_TYPE;
+  node->type = INT_TYPE;
+  node->astNodeClass = "LIT_INT";
 
   return node;
 }

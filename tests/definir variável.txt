@@ -7,7 +7,7 @@
     return result;
   }
 
-  int tvar3 = 5;
+  int tvar3 = 5 1 +;
  
   {
     int different = 3;

@@ -8,6 +8,7 @@
 #include "symbol_table.h"
 #include "defines.h"
 #include "utils.h"
+#include "types.h"
 
 extern int yylex();
 
@@ -45,7 +46,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 %nonassoc ELSE
 
 // Types definitions
-%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument math_expression
 %type <str> DATA_TYPE identifier math_operator
 %%
 /* Regras definindo a GLC e acoes correspondentes */
@@ -149,7 +150,7 @@ declare_var: DATA_TYPE identifier '=' expression {
 ;
 
 DATA_TYPE
-	: TYPE_INT { $$ = "INT"; }
+	: TYPE_INT { $$ = INT_TYPE; }
 	| TYPE_FLOAT { $$ = "FLOAT"; }
 ;
 
@@ -177,6 +178,16 @@ math_expression:
 	expression expression math_operator {
 		syn_print("essa string %s\n", $3);
 
+		AstParam nodeParam = {
+			.nodeType = enumLeftRightBranch,
+			.astNodeClass = "MATH_EXPRESSION",
+			.type = INT_TYPE,
+			.value = $3, // operador
+			.leftBranch = $1,
+			.rightBranch = $2,
+		};
+
+		$$ = add_ast_node(nodeParam);
 	}
 ;
 math_operator
