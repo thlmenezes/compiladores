@@ -179,7 +179,14 @@ read_command: READ '(' identifier ')' {
 };
 
 write_command: LOG '(' expression ')' {
-	AstParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="LOG_COMMAND" };
+	AstParam astP = {
+		.type = $1,
+		.leftBranch = $3,
+		.value = "LOG",
+	  .nodeType = enumValueLeftBranch,
+		.astNodeClass = "LOG_COMMAND",
+	};
+
 	$$ = add_ast_node(astP);
 	// printf("yoooooooooo 2 tokenBuffer is %s/n", $1);
 	};
