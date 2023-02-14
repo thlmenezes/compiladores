@@ -81,6 +81,7 @@ void print_parser_ast(parserNode *node, int level)
       }
       printf("\n");
       print_parser_ast(node->leftBranch, level + 1);
+      if (node->middleBranch != NULL) print_parser_ast(node->middleBranch, level + 1);
       print_parser_ast(node->rightBranch, level + 1);
   }
 }

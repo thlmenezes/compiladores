@@ -226,12 +226,17 @@ use_var_expression: identifier  {
 			YYABORT;
 		}
 
-		// TODO: create AST node and return it
-		$$ = NULL;
+		AstParam nodeParam = {
+			.nodeType = enumValueTypeOnly,
+		  .astNodeClass = "USE_VAR_EXP",
+			.value = $1,
+			.type = INT_TYPE,
+		};
+		$$ = add_ast_node(nodeParam);
 	}
 ;
 
-func_call: identifier '(' argument_list ')';
+func_call: identifier '(' argument_list ')' { $$ = NULL; };
 
 argument_list
 	: %empty
@@ -312,7 +317,14 @@ declare_func:
 ;
 
 return_command:
-	RETURN expression { $$ = NULL; }
+	RETURN expression {
+		AstParam nodeParam = {
+			.nodeType = enumValueLeftBranch,
+		  .astNodeClass = "RETURN_CMD",
+			.leftBranch = $2,
+		};
+		$$ = add_ast_node(nodeParam);
+	}
 ;
 
 identifier:
