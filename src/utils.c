@@ -24,6 +24,20 @@ int gen_random_uniqueID() {
 }
 
 int parseInt(char* s) {
-  // TODO: implementar
-  return 88;
+
+  char ret[30] = "";
+  int counter = 0, i;
+  int newInt;
+
+  for (i = 0; s[i] != '\0'; i++){
+    if (s[i] != ' '){
+      ret[counter] = s[i];
+      counter++;
+    }
+  }
+
+  newInt = atoi(ret);
+
+  return newInt;
+
 }
