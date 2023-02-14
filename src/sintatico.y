@@ -157,13 +157,13 @@ loop_while: WHILE '(' expression ')' command;
 read_command: READ '(' identifier ')' {
 	astParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="READ_COMMAND" };
     $$ = add_ast_node(astP);
-	printf("yoooooooooo tokenBuffer is %s/n", $1);
+	// printf("yoooooooooo tokenBuffer is %s/n", $1);
 };
 
 write_command: LOG '(' expression ')' {
 	astParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="LOG_COMMAND" };
 	$$ = add_ast_node(astP);
-	printf("yoooooooooo 2 tokenBuffer is %s/n", $1);
+	// printf("yoooooooooo 2 tokenBuffer is %s/n", $1);
 	};
 
 expression
@@ -245,10 +245,9 @@ declare_func:
 		create_new_scope_level();
 	} declar_argument_list ')' bloco {
 
-		// probably wrong
 		decrease_scope_level();
 
-		$$ = $1;
+		$$ = NULL;
 	}
 ;
 
