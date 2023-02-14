@@ -74,7 +74,7 @@ void print_parser_ast(parserNode *node, int level)
       }
       if (node->value != NULL)
       {
-        printf("value: %s - ", node->value);
+        printf("value: \"%s\" - ", node->value);
       }
       {
         // printf("CAST: %s - ", node->cast);
