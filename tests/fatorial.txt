@@ -1,0 +1,8 @@
+{
+  int fat(int n) {
+    if (n) return n fat(n 1 -) *;
+    else return 1;
+  }
+
+  log(fat(5));
+}

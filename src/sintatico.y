@@ -122,8 +122,25 @@ single_command
 ;
 
 if_else
-	: IF '(' expression ')' command %prec LOWER_THAN_ELSE {}
-	| IF '(' expression ')' command ELSE command
+	: IF '(' expression ')' command %prec LOWER_THAN_ELSE {
+		AstParam nodeParam = {
+			.nodeType = enumLeftRightBranch,
+			.astNodeClass = "IF_THEN",
+			.leftBranch = $3,
+			.rightBranch = $5,
+		};
+		$$ = add_ast_node(nodeParam);
+	}
+	| IF '(' expression ')' command ELSE command {
+		AstParam nodeParam = {
+			.nodeType = enumLeftRightMiddleBranch,
+			.astNodeClass = "IF_THEN_ELSE",
+			.leftBranch = $3,
+			.middleBranch = $5,
+			.rightBranch = $7,
+		};
+		$$ = add_ast_node(nodeParam);
+	}
 ;
 
 declare_var: DATA_TYPE identifier '=' expression {
