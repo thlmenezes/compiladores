@@ -236,12 +236,36 @@ use_var_expression: identifier  {
 	}
 ;
 
-func_call: identifier '(' argument_list ')' { $$ = NULL; };
+func_call: identifier '(' argument_list ')' {
+  AstParam nodeParam = {
+  	.nodeType = enumValueLeftBranch,
+  	.astNodeClass = "FUNC_CALL",
+  	.leftBranch = $3,
+		.value = $1,
+		.type = INT_TYPE,
+  };
+  $$ = add_ast_node(nodeParam);
+};
 
 argument_list
-	: %empty
-	| expression
-	| expression ',' argument_list
+	: %empty { $$ = NULL; }
+	| expression {
+		AstParam nodeParam = {
+			.nodeType = enumValueLeftBranch,
+			.astNodeClass = "ARG_LIST_ITEM",
+			.leftBranch = $1,
+		};
+		$$ = add_ast_node(nodeParam);
+	}
+	| expression ',' argument_list {
+		AstParam nodeParam = {
+			.nodeType = enumLeftRightBranch,
+			.astNodeClass = "ARG_LIST",
+			.leftBranch = $1,
+			.rightBranch = $3,
+		};
+		$$ = add_ast_node(nodeParam);
+	}
 ;
 
 declar_argument_list
