@@ -46,7 +46,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 
 // Types definitions
 %type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument
-%type <str> DATA_TYPE identifier
+%type <str> DATA_TYPE identifier math_operator
 %%
 /* Regras definindo a GLC e acoes correspondentes */
 /* neste nosso exemplo quase todas as acoes estao vazias */
@@ -169,10 +169,20 @@ write_command: LOG '(' expression ')' {
 expression
 	: literal_expression
 	| use_var_expression
-	| expression expression '+'			{
-		// syn_print("essa string %d, %d\n", $1, $2);
-	}
+	| math_expression
 	| func_call
+;
+
+math_expression:
+	expression expression math_operator {
+		syn_print("essa string %s\n", $3);
+	}
+;
+math_operator
+	: '+' { $$ = "+"; }
+	| '-' { $$ = "-"; }
+	| '*' { $$ = "*"; }
+	| '/' { $$ = "/"; }
 ;
 
 literal_expression 
