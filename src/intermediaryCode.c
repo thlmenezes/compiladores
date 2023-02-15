@@ -23,7 +23,7 @@ char* cleanUpTerminal(ParserNode* terminalExpNode) {
 static int loopCounter = 0;
 char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
 
-  if (parser_ast == NULL) return NULL;
+  if (parser_ast == NULL) return "";
 
   char* nodeClass = parser_ast->astNodeClass;
   if (!strcmp(nodeClass, "COMMANDS_LIST")) {
@@ -65,18 +65,29 @@ char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
   } else if (!strcmp(nodeClass, "USE_VAR_EXP")) {
     return concatStrs(5, "t", intToStr(*tempVarCounter), " = ", parser_ast->value, "\n");
   } else if (!strcmp(nodeClass, "WHILE")) {
-    char* checkCondition = concatStrs(15,
+    char* checkCondition = concatStrs(19,
       "// start of while loop\n",
       "WHILE_LOOP_", intToStr(loopCounter++), ":\n",
       _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
       "// jump to end if condition == 0\n",
-      "jeq0 t", intToStr(*tempVarCounter), "\n",
+      "jeqz t", intToStr(*tempVarCounter), " WHILE_LOOP_END_", intToStr(loopCounter),"\n",
       "// start of while loop body\n",
       _make3AddrCode(parser_ast->rightBranch, tempVarCounter),
-      "// jump to start of while loop\n",
-      "j WHILE_LOOP_", intToStr(loopCounter), "\n"
+      "j WHILE_LOOP_", intToStr(loopCounter), "\n",
+      "WHILE_LOOP_END_", intToStr(loopCounter), ":\n"
     );
     return checkCondition;
+  } else if (!strcmp(nodeClass, "IF_THEN")) {
+    return concatStrs(13,
+      "// if condition\n",
+      _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
+      "// jump over then block if condition == 0\n",
+      "jeqz t", intToStr(*tempVarCounter),  " IF_THEN_END_", intToStr(loopCounter++), "\n",
+      "// start of then block\n",
+      _make3AddrCode(parser_ast->rightBranch, tempVarCounter),
+      "IF_THEN_END_", intToStr(loopCounter), ":\n"
+    );
+
   } else if (!strcmp(nodeClass, "ASSIGN_VAR")) {
     char temp[200];
     sprintf(temp, "// value to insert in \"%s\" is in \"t%d\"\n", parser_ast->value, *tempVarCounter);
