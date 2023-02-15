@@ -6,7 +6,7 @@
 
   while (n) {
     fat = fat n *;
-    n = n 1 +;
+    n = n 1 -;
   };
 
   log (fat);

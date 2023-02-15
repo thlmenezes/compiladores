@@ -20,6 +20,7 @@ char* cleanUpTerminal(ParserNode* terminalExpNode) {
   return copyString(terminalExpNode->value);
 }
 
+static int loopCounter = 0;
 char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
 
   if (parser_ast == NULL) return NULL;
@@ -40,17 +41,32 @@ char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
     if (isTerminalExpression(parser_ast->leftBranch) && isTerminalExpression(parser_ast->rightBranch)) {
       char temp[100];
       sprintf(temp, "t%d = %s %s %s", *tempVarCounter, cleanUpTerminal(parser_ast->leftBranch), parser_ast->value, cleanUpTerminal(parser_ast->rightBranch));
+      *tempVarCounter += 1;
       return concatStrs(2, temp, "\n");
     }
+  } else if (!strcmp(nodeClass, "WHILE")) {
+    char* checkCondition = concatStrs(15,
+      "// start of while loop\n",
+      "WHILE_LOOP_", intToStr(loopCounter++), ":\n",
+      _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
+      "// jump to end if condition == 0\n",
+      "jeq0 t", intToStr(*tempVarCounter), "\n",
+      "// start of while loop body\n",
+      _make3AddrCode(parser_ast->rightBranch, tempVarCounter),
+      "// jump to start of while loop\n",
+      "j WHILE_LOOP_", intToStr(loopCounter), "\n"
+    );
+    return checkCondition;
   } else if (!strcmp(nodeClass, "ASSIGN_VAR")) {
     char temp[200];
     sprintf(temp, "// value to insert in var is in \"t%d\"\n", *tempVarCounter);
-    char* calcVarValue = concatStrs(8,
+    char* calcVarValue = concatStrs(12,
       "// start calculating value to insert in var \"", parser_ast->value, "\"\n",
       _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
-      "// end calculating value to insert in var \"", parser_ast->value, "\"\n", temp
+      "// end calculating value to insert in var \"", parser_ast->value, "\"\n", temp,
+      parser_ast->value, " = t", intToStr(*tempVarCounter),"\n"
     );
-    *tempVarCounter += 1;
+    // *tempVarCounter += 1;
     return calcVarValue;
   } else {
     char* left = _make3AddrCode(parser_ast->leftBranch, tempVarCounter);
