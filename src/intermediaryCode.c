@@ -182,14 +182,14 @@ char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter, int* loopCount
   } else if (!strcmp(nodeClass, "WHILE")) {
     char* checkCondition = concatStrs(19,
       "// start of while loop\n",
-      "WHILE_LOOP_", intToStr(loopCounter++), ":\n",
+      "WHILE_LOOP_", intToStr(*loopCounter++), ":\n",
       _make3AddrCode(parser_ast->leftBranch, tempVarCounter, loopCounter, callStack),
       "// jump to end if condition == 0\n",
-      "jeqz t", intToStr(*tempVarCounter), " WHILE_LOOP_END_", intToStr(loopCounter),"\n",
+      "jeqz t", intToStr(*tempVarCounter), " WHILE_LOOP_END_", intToStr(*loopCounter),"\n",
       "// start of while loop body\n",
       _make3AddrCode(parser_ast->rightBranch, tempVarCounter, loopCounter, callStack),
-      "j WHILE_LOOP_", intToStr(loopCounter), "\n",
-      "WHILE_LOOP_END_", intToStr(loopCounter), ":\n"
+      "j WHILE_LOOP_", intToStr(*loopCounter), "\n",
+      "WHILE_LOOP_END_", intToStr(*loopCounter), ":\n"
     );
     return checkCondition;
   } else if (!strcmp(nodeClass, "IF_THEN")) {
