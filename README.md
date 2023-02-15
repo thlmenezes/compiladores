@@ -40,6 +40,8 @@ Para executar todos os testes de uma só vez (todos os arquivos presentes na pas
 
 ### Como usar o script `mount.py`
 
+Requisito: versão do Python >= 3.9
+
 ![image](https://user-images.githubusercontent.com/33532177/218939098-5fc27412-9a42-4d93-8efc-b8580c3eb555.png)
 
 É esperado que exista um arquivo chamado `code.txt` contendo código de 3 endereços e será gerado um `result.asm` em formato assembly RISC-V válido.
