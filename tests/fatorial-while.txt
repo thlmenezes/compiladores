@@ -9,5 +9,5 @@
     n = n 1 -;
   }
 
-  log (fat 1 1 + +);
+  log (fat);
 }
