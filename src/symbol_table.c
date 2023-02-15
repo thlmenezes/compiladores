@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "defines.h"
+#include "utils.h"
 #include "ustack.h"
 #include "symbol_table.h"
 
@@ -20,11 +21,13 @@ void addSymbol(SymbolData newSymbolData) {
   // se está adicionando um parametro a uma função, atualize a função
   if (newSymbolData.symbolType == enumParameter) {
     Symbol *func;
-  
-    for (func = symbolTable; func != (Symbol*) NULL; func = (Symbol*)(func -> hh.next))
-    if (func->name == newSymbolData.associatedFunction && func->scopeID == newSymbolData.associatedFunctionScopeId) {
-      func->last_param++;
-      func->params_id_list[func->last_param] = newSymbolData.symbolID;
+
+    for (func = symbolTable; func != (Symbol*) NULL; func = (Symbol*)(func -> hh.next)) {
+      // printf("AAAAAA |%s||%s|\n", func->name, newSymbolData.associatedFunction);
+      if (func->name == newSymbolData.associatedFunction && func->scopeID == newSymbolData.associatedFunctionScopeId) {
+        func->last_param++;
+        func->params_id_list[func->last_param] = newSymbolData.symbolID;
+      }
     }
   }
 
@@ -45,12 +48,20 @@ void addSymbol(SymbolData newSymbolData) {
   // newSymbolPtr->params_id_list[0] = -1;
   newSymbolPtr->last_param = -1;
 
+  newSymbolPtr->associatedFunction = newSymbolData.associatedFunction;    
+
   // adiciona o novo elemento na tabela
   HASH_ADD_INT(symbolTable, symbolID, newSymbolPtr);
 }
 
 void printSymbol(Symbol* symbol) {
-  printf("\t- symbol name: \"%s\". type: \"%s\". kind: \"%s\". scopeLvl: %i. scope: %i\n", symbol->name, symbol->type, &symbol->symbolType, symbol->scopeLevel, symbol->scopeID);
+  if (symbol->symbolType == enumParameter) {
+    printf("\t- ID: %d. func %s. symbol name: \"%s\". type: \"%s\". kind: \"%s\". scopeLvl: %i. scope: %i\n", symbol->symbolID, symbol->associatedFunction, symbol->name, symbol->type, &symbol->symbolType, symbol->scopeLevel, symbol->scopeID);
+  } else if (symbol->symbolType == enumFunction) {
+    printf("\t- ID: %d. params %d. symbol name: \"%s\". type: \"%s\". kind: \"%s\". scopeLvl: %i. scope: %i\n", symbol->symbolID, symbol->last_param, symbol->name, symbol->type, &symbol->symbolType, symbol->scopeLevel, symbol->scopeID);
+  } else {
+    printf("\t- ID: %d. symbol name: \"%s\". type: \"%s\". kind: \"%s\". scopeLvl: %i. scope: %i\n", symbol->symbolID, symbol->name, symbol->type, &symbol->symbolType, symbol->scopeLevel, symbol->scopeID);
+  }
 }
 
 void printSymbolTable() {
@@ -63,6 +74,25 @@ void printSymbolTable() {
     current = (Symbol*) current->hh.next;
   }
   printf("==============================================================\n");
+}
+
+Symbol* getSymbolById(int id) {
+  for (Symbol* current = symbolTable; current != NULL; current = (Symbol*) current->hh.next) {
+    if (id == current->symbolID) {
+      return current;
+    }
+  }
+
+  return NULL;
+}
+Symbol* getSymbol(char* symbolName) {
+  for (Symbol* current = symbolTable; current != NULL; current = (Symbol*) current->hh.next) {
+    if (strcmp(symbolName, current->name) == 0) {
+      return current;
+    }
+  }
+
+  return NULL;
 }
 
 int symbolExists(char* symbolName) {

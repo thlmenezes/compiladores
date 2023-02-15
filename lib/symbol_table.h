@@ -59,6 +59,8 @@ Symbol *symbolTable;
 void addSymbol(SymbolData newSymbolData);
 void printSymbolTable();
 int symbolExists(char* symbolName);
+Symbol* getSymbol(char* symbolName);
+Symbol* getSymbolById(int id);
 
 // SCOPE
 typedef struct ScopeStack {

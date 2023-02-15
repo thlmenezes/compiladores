@@ -19,6 +19,7 @@ ParserNode* parser_ast = NULL;
 
 /* lexeme of identifier or reserved word */
 char tokenBuffer[MAXTOKENLEN+1];
+char functionBuffer[100];
 %}
 
 %union {
@@ -325,9 +326,16 @@ declar_argument:
 			.type = $1,
 			.name = $2,
 			.scopeID = current_scope.scopeID,
-			.scopeLevel = current_scope.level
+			.scopeLevel = current_scope.level,
+			// .associatedFunction = copyString(functionBuffer),
 		};
+		// strcpy(newParam.associatedFunction, functionBuffer);
+		newParam.associatedFunction = copyString(functionBuffer);
+		printf("AAAAAAAAAAAAAAAAss function %s\n", newParam.associatedFunction);
 		addSymbol(newParam);
+		Symbol* fooSymbol = getSymbol(functionBuffer);
+		fooSymbol->last_param++;
+		fooSymbol->params_id_list[fooSymbol->last_param++] = globalCounterOfSymbols-1;
 
 		AstParam nodeParam = {
 			.nodeType = enumValueTypeOnly,
@@ -354,6 +362,7 @@ declare_func:
 			.scopeLevel = current_scope.level
 		};
 		addSymbol(newFunc);
+		strcpy(functionBuffer, $2);
 
 		// create scope for block and arglist
 		create_new_scope_level();
