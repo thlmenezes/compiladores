@@ -2,6 +2,10 @@
   "files.associations": {
     "*.y": "yacc",
     "*.tcc": "c",
-    "stdexcept": "cpp"
+    "stdexcept": "cpp",
+    "intermediarycode.h": "c",
+    "symbol_table.h": "c",
+    "string.h": "c",
+    "callstack.h": "c"
   }
 }

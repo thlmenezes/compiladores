@@ -1,11 +1,18 @@
 ## read code from file
 code = []
-with open('code.txt', 'r') as code_file:
-    code = [
-            line.removesuffix('\n').removesuffix('\r')
-            for line in code_file.readlines()
-            if not (line.startswith('//') or line.isspace())
-    ]
+with open('output.log', 'r') as code_file:
+    startReading = 0
+
+    for line in code_file.readlines():
+        if ((startReading > 0 ) and (not (line.startswith('//') or line.isspace()))):
+            code = [
+                line.removesuffix('\n').removesuffix('\r')
+            ]
+        if ("3-address code" in line): 
+            print("achei a linha")
+            startReading = 1
+
+
 ### handle variables
 saved_vars = []
 def fetch_var(var: str) -> str:
