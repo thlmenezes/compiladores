@@ -331,7 +331,6 @@ declar_argument:
 		};
 		// strcpy(newParam.associatedFunction, functionBuffer);
 		newParam.associatedFunction = copyString(functionBuffer);
-		printf("AAAAAAAAAAAAAAAAss function %s\n", newParam.associatedFunction);
 		addSymbol(newParam);
 		Symbol* fooSymbol = getSymbol(functionBuffer);
 		fooSymbol->last_param++;
