@@ -20,6 +20,14 @@ char* cleanUpTerminal(ParserNode* terminalExpNode) {
   return copyString(terminalExpNode->value);
 }
 
+char* subExpression3Add(ParserNode* subExprNode, int* tempVarCounter) {
+  if (!isTerminalExpression(subExprNode)) {
+    return _make3AddrCode(subExprNode, tempVarCounter);
+  }
+  *tempVarCounter += 1;
+  return concatStrs(5, "t", intToStr(*tempVarCounter - 1), " = ", cleanUpTerminal(subExprNode), "\n");
+}
+
 static int loopCounter = 0;
 char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
 
@@ -44,6 +52,25 @@ char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
       *tempVarCounter += 1;
       return concatStrs(2, temp, "\n");
     }
+
+    char* subExprL = subExpression3Add(parser_ast->leftBranch, tempVarCounter);
+    int subExprLResultVar = *tempVarCounter - 1;
+    char* subExprR = subExpression3Add(parser_ast->rightBranch, tempVarCounter);
+    int subExprRResultVar = *tempVarCounter - 1;
+
+    char temp[30];
+    sprintf(temp, "t%d = t%d %s t%d\n", *tempVarCounter, subExprLResultVar, parser_ast->value, subExprRResultVar);
+    *tempVarCounter += 1;
+
+    return concatStrs(6,
+      "// calculate sub-expr L\n",
+      subExprL, 
+      "// calculate sub-expr R\n",
+      subExprR,
+      "// operate on sub_exp results\n",
+      temp
+    );
+
   } else if (!strcmp(nodeClass, "DECLARE_VARIABLE")) {
     char* assignValue = isTerminalExpression(parser_ast->leftBranch)
       ? cleanUpTerminal(parser_ast->leftBranch)
