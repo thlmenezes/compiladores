@@ -89,7 +89,6 @@ int yywrap() {
 	return 1;
 }
 
-
 void create_and_store_token(char* token_lexeme) {
 	strncpy(tokenBuffer, yytext, MAXTOKENLEN);
 	lex_print("yytext: \"%s\". tb: \"%s\"\n", yytext, tokenBuffer);

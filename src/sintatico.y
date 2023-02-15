@@ -204,7 +204,6 @@ loop_while: WHILE '(' expression ')' command {
 read_command: READ '(' identifier ')' {
 	AstParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="READ_COMMAND" };
     $$ = add_ast_node(astP);
-	// printf("yoooooooooo tokenBuffer is %s/n", $1);
 };
 
 write_command: LOG '(' expression ')' {
@@ -217,8 +216,7 @@ write_command: LOG '(' expression ')' {
 	};
 
 	$$ = add_ast_node(astP);
-	// printf("yoooooooooo 2 tokenBuffer is %s/n", $1);
-	};
+};
 
 expression
 	: literal_expression
