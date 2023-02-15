@@ -2,22 +2,33 @@
 #include "utils.h"
 #include "string.h"
 
-char* _make3AddrCode(ParserNode* parser_ast);
+char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter);
 char* make3AddrCode(ParserNode* parser_ast) {
+  int varCounter = 0;
   return concatStr(
     printFunctionDeclarations(parser_ast),
-    _make3AddrCode(parser_ast)
+    _make3AddrCode(parser_ast, &varCounter)
   );
 }
-char* _make3AddrCode(ParserNode* parser_ast) {
+
+int isTerminalExpression(ParserNode* exprNode) {
+  return (!strcmp(exprNode->astNodeClass, "LIT_INT")) || (!strcmp(exprNode->astNodeClass, "USE_VAR_EXP"));
+}
+
+char* cleanUpTerminal(ParserNode* terminalExpNode) {
+  if (!strcmp(terminalExpNode->astNodeClass, "LIT_INT")) return intToStr(parseInt(terminalExpNode->value));
+  return copyString(terminalExpNode->value);
+}
+
+char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
 
   if (parser_ast == NULL) return NULL;
 
   char* nodeClass = parser_ast->astNodeClass;
   if (!strcmp(nodeClass, "COMMANDS_LIST")) {
     // printf("types|%s|\n", parser_ast->leftBranch->astNodeClass);
-    char* firstCommand = _make3AddrCode(parser_ast->leftBranch);
-    char* rest = _make3AddrCode(parser_ast->rightBranch);
+    char* firstCommand = _make3AddrCode(parser_ast->leftBranch, tempVarCounter);
+    char* rest = _make3AddrCode(parser_ast->rightBranch, tempVarCounter);
 
     return concatStr(firstCommand, rest);
   } else if (!strcmp(nodeClass, "FUNCTION_DECL")) {
@@ -25,10 +36,26 @@ char* _make3AddrCode(ParserNode* parser_ast) {
     char* commentWarning = concatStr(warningStart, "\" was here\n");
     free(warningStart);
     return commentWarning;
+  } else if (!strcmp(nodeClass, "MATH_EXPRESSION")) {
+    if (isTerminalExpression(parser_ast->leftBranch) && isTerminalExpression(parser_ast->rightBranch)) {
+      char temp[100];
+      sprintf(temp, "t%d = %s %s %s", *tempVarCounter, cleanUpTerminal(parser_ast->leftBranch), parser_ast->value, cleanUpTerminal(parser_ast->rightBranch));
+      return concatStrs(2, temp, "\n");
+    }
+  } else if (!strcmp(nodeClass, "ASSIGN_VAR")) {
+    char temp[200];
+    sprintf(temp, "// value to insert in var is in \"t%d\"\n", *tempVarCounter);
+    char* calcVarValue = concatStrs(8,
+      "// start calculating value to insert in var \"", parser_ast->value, "\"\n",
+      _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
+      "// end calculating value to insert in var \"", parser_ast->value, "\"\n", temp
+    );
+    *tempVarCounter += 1;
+    return calcVarValue;
   } else {
-    char* left = _make3AddrCode(parser_ast->leftBranch);
-    char* middle = _make3AddrCode(parser_ast->middleBranch);
-    char* right = _make3AddrCode(parser_ast->rightBranch);
+    char* left = _make3AddrCode(parser_ast->leftBranch, tempVarCounter);
+    char* middle = _make3AddrCode(parser_ast->middleBranch, tempVarCounter);
+    char* right = _make3AddrCode(parser_ast->rightBranch, tempVarCounter);
     char* temp1 = concatStr(left, middle);
     char* result = concatStr(temp1, right);
     // free(left);

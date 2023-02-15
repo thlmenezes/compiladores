@@ -86,3 +86,9 @@ char* concatStrs(int n_args, ...) {
   free(strSizes);
   return result;
 }
+
+char* intToStr(int n) {
+  char* intStr = malloc(15*sizeof(int));
+  sprintf(intStr, "%d", n);
+  return intStr;
+}

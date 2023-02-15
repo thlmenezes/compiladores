@@ -10,3 +10,4 @@ typedef struct NodeList {
 NodeList* getFunctionDeclarations(ParserNode* root);
 char* printFunctionDeclarations(ParserNode* root);
 char* translateFunctionDeclaration(ParserNode* foo);
+int isTerminalExpression(ParserNode* exprNode);
