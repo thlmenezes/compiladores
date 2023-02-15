@@ -47,7 +47,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 %nonassoc ELSE
 
 // Types definitions
-%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument declar_argument_list math_expression
+%type <node> input line programa bloco command single_command if_else loop_while read_command write_command declare_var expression literal_expression func_call argument_list lista_cmds use_var_expression declare_func return_command declar_argument declar_argument_list math_expression assign_var
 %type <str> DATA_TYPE identifier math_operator
 %%
 /* Regras definindo a GLC e acoes correspondentes */
@@ -117,6 +117,7 @@ single_command
 	| read_command ';' { $$ = $1; }
 	| write_command ';' { $$ = $1; }
 	| declare_var ';' { $$ = $1; }
+	| assign_var ';' { $$ = $1; }
 	| expression ';' { $$ = $1; }
 	| return_command ';' { $$ = $1; }
 	| ';' { $$ = NULL; }
@@ -167,12 +168,39 @@ declare_var: DATA_TYPE identifier '=' expression {
 	}
 ;
 
+assign_var: identifier '=' expression {
+	if (!symbolExists($1)) {
+		syn_error("ERROR: assigning to undeclared var \"%s\"\n", $1);
+		YYABORT;
+	}
+
+	AstParam nodeParam = {
+		.nodeType = enumValueLeftBranch,
+		.astNodeClass = "ASSIGN_VAR",
+		.type = INT_TYPE,
+		.value = $1,
+		.leftBranch = $3,
+	};
+
+	$$ = add_ast_node(nodeParam);
+} 
+
 DATA_TYPE
 	: TYPE_INT { $$ = INT_TYPE; }
 	| TYPE_FLOAT { $$ = "FLOAT"; }
 ;
 
-loop_while: WHILE '(' expression ')' command;
+loop_while: WHILE '(' expression ')' command {
+	AstParam nodeParam = {
+		.nodeType = enumLeftRightBranch,
+		.astNodeClass = "WHILE",
+		.leftBranch = $3,
+		.rightBranch = $5,
+	};
+
+	$$ = add_ast_node(nodeParam);
+};
+
 read_command: READ '(' identifier ')' {
 	AstParam astP = { .type=$1, .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="READ_COMMAND" };
     $$ = add_ast_node(astP);

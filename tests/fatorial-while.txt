@@ -1,0 +1,13 @@
+{
+  int n = 0;
+  read(n);
+  
+  int fat = 1;
+
+  while (n) {
+    fat = fat n *;
+    n = n 1 +;
+  };
+
+  log (fat);
+}
