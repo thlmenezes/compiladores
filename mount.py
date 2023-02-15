@@ -5,9 +5,7 @@ with open('output.log', 'r') as code_file:
 
     for line in code_file.readlines():
         if ((startReading > 0 ) and (not (line.startswith('//') or line.isspace()))):
-            code = [
-                line.removesuffix('\n').removesuffix('\r')
-            ]
+            code.append(line.removesuffix('\n').removesuffix('\r'))
         if ("3-address code" in line): 
             print("achei a linha")
             startReading = 1
