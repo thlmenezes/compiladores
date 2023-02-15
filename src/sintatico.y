@@ -9,12 +9,13 @@
 #include "defines.h"
 #include "utils.h"
 #include "types.h"
+#include "intermediaryCode.h"
 
 extern int yylex();
 
 int globalCounterOfSymbols = 1;
 
-parserNode* parser_ast = NULL;
+ParserNode* parser_ast = NULL;
 
 /* lexeme of identifier or reserved word */
 char tokenBuffer[MAXTOKENLEN+1];
@@ -22,7 +23,7 @@ char tokenBuffer[MAXTOKENLEN+1];
 
 %union {
   char* str;
-  struct parserNode* node;
+  struct ParserNode* node;
 }
 
 %token<str> IF
@@ -221,7 +222,7 @@ math_operator
 
 literal_expression 
 	: NUM 			{
-		// parserNode* node = createLiteralIntNode($1);
+		// ParserNode* node = createLiteralIntNode($1);
 		// printLiteralIntNode(node);
 		// $$ = node;
 		$$ = createLiteralIntNode($1);
@@ -372,7 +373,11 @@ int main() {
 	yyparse();
 
 	printf("\n=================== Parser AST ====================\n\n");
-    print_parser_ast(parser_ast, 0);
+    print_parser_ast(parser_ast, 0, none);
+	
+	printf("\n================= 3-address code ==================\n\n");
+	char* intermediaryCode = make3AddrCode(parser_ast);
+	printf("%s\n", intermediaryCode);
 	return 0;
 }
 

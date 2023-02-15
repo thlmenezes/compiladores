@@ -13,33 +13,40 @@ enum astNodeType {
 }; /* definições para o Node type */
 
 /* struct to represent the AST and nodes */
-typedef struct parserNode {
-  struct parserNode* rightBranch;
-  struct parserNode* leftBranch;
-  struct parserNode* middleBranch;
+typedef struct ParserNode {
+  struct ParserNode* rightBranch;
+  struct ParserNode* leftBranch;
+  struct ParserNode* middleBranch;
   char* value;
   char* type;
   char* astNodeClass;
   // char* tempReg;
   // char* cast;
-} parserNode;
+} ParserNode;
 
 /* struct used as param during the parsing of the source code to create new nodes */
 typedef struct AstParam {
-  struct parserNode* rightBranch;
-  struct parserNode* leftBranch;
-  struct parserNode* middleBranch;
+  struct ParserNode* rightBranch;
+  struct ParserNode* leftBranch;
+  struct ParserNode* middleBranch;
   char* value;
   char* type;
   char* astNodeClass;
   enum astNodeType nodeType;
 } AstParam;
 
-void print_parser_ast(parserNode *node, int level);
+typedef enum Side {
+  left,
+  middle,
+  right,
+  none
+} Side;
+
+void print_parser_ast(ParserNode *node, int level, Side side);
 
 /* returns one node of the AST based on AstParam */
-parserNode* add_ast_node(AstParam AstParam);
-parserNode* createLiteralIntNode(char* numStr);
-void printLiteralIntNode(parserNode* node);
+ParserNode* add_ast_node(AstParam AstParam);
+ParserNode* createLiteralIntNode(char* numStr);
+void printLiteralIntNode(ParserNode* node);
  
 #endif // AST_

@@ -1,6 +1,7 @@
 #include "defines.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 char * copyString(char * s)
 { int n;
@@ -40,4 +41,48 @@ int parseInt(char* s) {
 
   return newInt;
 
+}
+
+char* concatStr(char* str1, char* str2) {
+  if (!str1 && !str2) return "";
+  if (str1 == NULL) return str2;
+  if (str2 == NULL) return str1;
+
+  char* result = malloc(strlen(str1) + strlen(str2) + 1);
+
+  strcpy(result, str1);
+  strcpy((char*) (result + strlen(str1)), str2);
+ 
+  //! DANGEROUS. IF THINGS GO WRONG COMMENT THIS OUT AND JUST LET MEMORY LEAKS HAPPEN
+  // free(str1);
+  // free(str2);
+
+  return result;
+}
+
+char* concatStrs(int n_args, ...) {
+  va_list args;
+  va_start(args, n_args);
+
+  char** strs = malloc(sizeof(char*) * n_args);
+  int* strSizes = malloc(sizeof(int) * n_args);
+  int strSize = 1;
+  for (int count = 0; count < n_args; count++) {
+    strs[count] = va_arg(args, char*);
+    strSizes[count] = strlen(strs[count]);
+    strSize += strSizes[count];
+  }
+
+  char* result = malloc(strSize * sizeof(char));
+
+  for (int offset = 0, i = 0; i < n_args; offset += strSizes[i], i++) {
+    if (strs[i] == NULL) continue;
+    strcpy(result + offset, strs[i]);
+  }
+
+  va_end(args);
+
+  free(strs);
+  free(strSizes);
+  return result;
 }
