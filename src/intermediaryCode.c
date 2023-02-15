@@ -44,6 +44,26 @@ char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
       *tempVarCounter += 1;
       return concatStrs(2, temp, "\n");
     }
+  } else if (!strcmp(nodeClass, "DECLARE_VARIABLE")) {
+    char* assignValue = isTerminalExpression(parser_ast->leftBranch)
+      ? cleanUpTerminal(parser_ast->leftBranch)
+      : concatStrs(2, "t", intToStr(*tempVarCounter));
+
+    return concatStrs(5,
+      _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
+      parser_ast->value, " = ", assignValue, "\n"
+    );
+  } else if (!strcmp(nodeClass, "READ_COMMAND")) {
+    return concatStrs(3,
+      "read ", parser_ast->value, "\n"
+    );
+  } else if (!strcmp(nodeClass, "LOG_COMMAND")) {
+    return concatStrs(4,
+      _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
+      "log t", intToStr(*tempVarCounter), "\n"
+    );
+  } else if (!strcmp(nodeClass, "USE_VAR_EXP")) {
+    return concatStrs(5, "t", intToStr(*tempVarCounter), " = ", parser_ast->value, "\n");
   } else if (!strcmp(nodeClass, "WHILE")) {
     char* checkCondition = concatStrs(15,
       "// start of while loop\n",
@@ -59,7 +79,7 @@ char* _make3AddrCode(ParserNode* parser_ast, int* tempVarCounter) {
     return checkCondition;
   } else if (!strcmp(nodeClass, "ASSIGN_VAR")) {
     char temp[200];
-    sprintf(temp, "// value to insert in var is in \"t%d\"\n", *tempVarCounter);
+    sprintf(temp, "// value to insert in \"%s\" is in \"t%d\"\n", parser_ast->value, *tempVarCounter);
     char* calcVarValue = concatStrs(12,
       "// start calculating value to insert in var \"", parser_ast->value, "\"\n",
       _make3AddrCode(parser_ast->leftBranch, tempVarCounter),
